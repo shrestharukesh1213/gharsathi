@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gharsathi/services/authentication.dart';
 
 class Loginscreen extends StatefulWidget {
@@ -35,6 +34,7 @@ class _LoginscreenState extends State<Loginscreen> {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                obscureText: true,
                 controller: _passwordController,
                 decoration: const InputDecoration(
                   labelText: 'Enter your password',
