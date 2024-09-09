@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "362471044038",
+    "project_id": "gharsathi-da6fc",
+    "storage_bucket": "gharsathi-da6fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362471044038:android:571fc7d61f8a563fedf8c7",
+        "android_client_info": {
+          "package_name": "com.gharsathi.rentalapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSpiutyADTrFhP8nAM6tgZz-aVa41xnjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
