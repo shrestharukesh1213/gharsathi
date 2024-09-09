@@ -19,13 +19,8 @@ class Authentication {
       } else if (e.code == 'email-already-in-use') {
         message = 'Email already in use';
       }
-      Fluttertoast.showToast(
-          msg: message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          backgroundColor: Colors.white,
-          textColor: Colors.black87,
-          fontSize: 16.0);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {}
   }
 
@@ -40,13 +35,8 @@ class Authentication {
       Navigator.pushNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       String message = e.code;
-      Fluttertoast.showToast(
-          msg: message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          backgroundColor: Colors.white,
-          textColor: Colors.black87,
-          fontSize: 16.0);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.code)));
     } catch (e) {}
   }
 }
