@@ -1,15 +1,30 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Authentication {
   Future<void> signup(
-      {required String email,
+      {required String firstname,
+      required String lastname,
+      required String username,
+      required String email,
       required String password,
       required BuildContext context}) async {
     try {
-      await FirebaseAuth.instance
+      //Create User Account
+      UserCredential signup = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+
+      String userId = signup.user!.uid;
+
+      //Store User data in firestore
+      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+        'firstname': firstname,
+        'lastname': lastname,
+        'username': username,
+        'email': email,
+      });
+
       await Future.delayed(const Duration(seconds: 1));
       Navigator.pushNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
@@ -29,8 +44,10 @@ class Authentication {
       required String password,
       required BuildContext context}) async {
     try {
+      //Login to your account
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+
       await Future.delayed(const Duration(seconds: 1));
       Navigator.pushNamed(context, '/home');
     } on FirebaseAuthException catch (e) {

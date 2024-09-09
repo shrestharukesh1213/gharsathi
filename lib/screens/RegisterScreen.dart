@@ -9,6 +9,9 @@ class Registerscreen extends StatefulWidget {
 }
 
 class _RegisterscreenState extends State<Registerscreen> {
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -22,6 +25,33 @@ class _RegisterscreenState extends State<Registerscreen> {
           child: Form(
             child: Column(
               children: [
+                TextFormField(
+                  controller: _firstnameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter your First Name',
+                    hintText: 'Enter your First Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _lastnameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter your Last Name',
+                    hintText: 'Enter your Last Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter your User Name',
+                    hintText: 'Enter your User Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -44,6 +74,9 @@ class _RegisterscreenState extends State<Registerscreen> {
                 ElevatedButton(
                     onPressed: () async {
                       Authentication().signup(
+                          firstname: _firstnameController.text,
+                          lastname: _lastnameController.text,
+                          username: _usernameController.text,
                           email: _emailController.text,
                           password: _passwordController.text,
                           context: context);
