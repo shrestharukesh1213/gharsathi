@@ -9,6 +9,7 @@ import 'package:gharsathi/screens/ProfileScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
 import 'package:gharsathi/screens/SavedScreen.dart';
 import 'package:gharsathi/screens/SplashScreen.dart';
+import 'package:gharsathi/widgets/Navbar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,9 +26,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/splash',
+      initialRoute: '/',
       routes: {
-        '/splash': (context) => Splashscreen(),
+        '/': (context) => Splashscreen(),
         '/login': (context) => Loginscreen(),
         '/register': (context) => Registerscreen(),
         '/home': (context) => Homescreen(),
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/saved': (context) => Savedscreen(),
         '/chat': (context) => Chatscreen(),
         '/profile': (context) => Profilescreen(),
+        '/navbar': (context) => Navbar(),
       },
     );
   }

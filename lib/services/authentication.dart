@@ -26,7 +26,7 @@ class Authentication {
       });
 
       await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/navbar');
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {
@@ -49,7 +49,7 @@ class Authentication {
           .signInWithEmailAndPassword(email: email, password: password);
 
       await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/navbar');
     } on FirebaseAuthException catch (e) {
       String message = e.code;
       ScaffoldMessenger.of(context)
