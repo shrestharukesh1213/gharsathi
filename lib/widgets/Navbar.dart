@@ -43,7 +43,7 @@ class _NavbarState extends State<Navbar> {
           /// Home
           SalomonBottomBarItem(
             icon: const Icon(Icons.add),
-            title: const Text("Home"),
+            title: const Text("Add"),
             selectedColor: Colors.purple,
           ),
 
