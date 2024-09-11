@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/services/authentication.dart';
 
@@ -11,6 +12,7 @@ class Loginscreen extends StatefulWidget {
 class _LoginscreenState extends State<Loginscreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +24,17 @@ class _LoginscreenState extends State<Loginscreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               TextFormField(
                 controller: _emailController,
+                validator: (value) {
+                  if (!EmailValidator.validate(value!)) {
+                    return "Invalid Email";
+                  }
+                  return null;
+                },
                 decoration: const InputDecoration(
                   labelText: 'Email',
                   hintText: 'Enter your email',
@@ -36,6 +45,14 @@ class _LoginscreenState extends State<Loginscreen> {
               TextFormField(
                 obscureText: true,
                 controller: _passwordController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Password field should not be empty";
+                  } else if (value.length <= 6) {
+                    return "Password should be longer than 6 letters";
+                  }
+                  return null;
+                },
                 decoration: const InputDecoration(
                   labelText: 'Enter your password',
                   hintText: 'Enter your password  ',
@@ -48,10 +65,12 @@ class _LoginscreenState extends State<Loginscreen> {
                 height: 60, // Full width of the screen
                 child: ElevatedButton(
                     onPressed: () async {
-                      Authentication().signin(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                          context: context);
+                      if (_formKey.currentState!.validate()) {
+                        Authentication().signin(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                            context: context);
+                      }
                     },
                     child: const Text(
                       'Login',

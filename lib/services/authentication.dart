@@ -53,7 +53,7 @@ class Authentication {
     } on FirebaseAuthException catch (e) {
       String message = e.code;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.code)));
+          .showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {}
   }
 }
