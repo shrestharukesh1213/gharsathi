@@ -9,6 +9,7 @@ import 'package:gharsathi/screens/ProfileScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
 import 'package:gharsathi/screens/SavedScreen.dart';
 import 'package:gharsathi/screens/SplashScreen.dart';
+import 'package:gharsathi/screens/TenantScreen.dart';
 import 'package:gharsathi/widgets/Navbar.dart';
 
 Future<void> main() async {
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/chat': (context) => Chatscreen(),
         '/profile': (context) => Profilescreen(),
         '/navbar': (context) => Navbar(),
+        '/tenant': (context) => Tenantscreen(),
       },
     );
   }
