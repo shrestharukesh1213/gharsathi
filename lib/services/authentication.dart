@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Authentication {
-  Future<void> signup(
-      {required String firstname,
-      required String lastname,
-      required String username,
+  Future<void> signUp(
+      {required String firstName,
+      required String lastName,
+      required String userName,
       required String email,
       required String password,
       required String userType,
@@ -14,19 +14,19 @@ class Authentication {
       required BuildContext context}) async {
     try {
       //Create User Account
-      UserCredential signup = await FirebaseAuth.instance
+      UserCredential signUp = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      String userId = signup.user!.uid;
+      String userId = signUp.user!.uid;
 
       //Store User data in firestore
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
-        'firstname': firstname,
-        'lastname': lastname,
-        'username': username,
+        'firstName': firstName,
+        'lastName': lastName,
+        'userName': userName,
         'email': email,
-        'usertype':userType,
-        'phoneNumber':phoneNumber,
+        'usertype': userType,
+        'phoneNumber': phoneNumber,
       });
 
       await Future.delayed(const Duration(seconds: 1));
@@ -43,7 +43,7 @@ class Authentication {
     } catch (e) {}
   }
 
-  Future<void> signin(
+  Future<void> signIn(
       {required String email,
       required String password,
       required BuildContext context}) async {

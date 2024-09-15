@@ -12,9 +12,9 @@ class Registerscreen extends StatefulWidget {
 }
 
 class _RegisterscreenState extends State<Registerscreen> {
-  final _firstnameController = TextEditingController();
-  final _lastnameController = TextEditingController();
-  final _usernameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -33,7 +33,7 @@ class _RegisterscreenState extends State<Registerscreen> {
             child: Column(
               children: [
                 TextFormField(
-                  controller: _firstnameController,
+                  controller: _firstNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter a Firstname";
@@ -52,7 +52,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: _lastnameController,
+                  controller: _lastNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter a Lastname";
@@ -71,10 +71,10 @@ class _RegisterscreenState extends State<Registerscreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: _usernameController,
+                  controller: _userNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Enter a username";
+                      return "Enter a userName";
                     } else if (value.length <= 5) {
                       return "Username must be longer than 5 letters";
                     }
@@ -151,7 +151,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                         contentPadding: EdgeInsets.all(0.0),
                         value: UserTypeEnum.Tenant,
                         groupValue: _userTypeEnum,
-                        tileColor: Colors.deepPurple.shade50 ,
+                        tileColor: Colors.deepPurple.shade50,
                         title: Text(UserTypeEnum.Tenant.name),
                         onChanged: (UserTypeEnum? value) {
                           setState(() {
@@ -160,13 +160,15 @@ class _RegisterscreenState extends State<Registerscreen> {
                         },
                       ),
                     ),
-                    SizedBox(width:5.0,),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
                     Expanded(
                       child: RadioListTile<UserTypeEnum>(
                         contentPadding: EdgeInsets.all(0.0),
                         value: UserTypeEnum.Landlord,
                         groupValue: _userTypeEnum,
-                         tileColor: Colors.deepPurple.shade50 ,
+                        tileColor: Colors.deepPurple.shade50,
                         title: Text(UserTypeEnum.Landlord.name),
                         onChanged: (UserTypeEnum? value) {
                           setState(() {
@@ -175,7 +177,6 @@ class _RegisterscreenState extends State<Registerscreen> {
                         },
                       ),
                     ),
-                    
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -184,22 +185,25 @@ class _RegisterscreenState extends State<Registerscreen> {
                     if (_formKey.currentState!.validate()) {
                       if (_userTypeEnum == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                           SnackBar(
+                          SnackBar(
                             content: Text('Please select account type'),
                             backgroundColor: Colors.red,
                           ),
                         );
                       } else {
                         // Pass user's data for Authentication
-                        Authentication().signup(
-                          firstname: _firstnameController.text,
-                          lastname: _lastnameController.text,
-                          username: _usernameController.text,
+                        Authentication().signUp(
+                          firstName: _firstNameController.text,
+                          lastName: _lastNameController.text,
+                          userName: _userNameController.text,
                           email: _emailController.text,
                           password: _passwordController.text,
                           phoneNumber: _phoneController.text,
                           context: context,
-                          userType: _userTypeEnum.toString().split('.').last, // Passing user type
+                          userType: _userTypeEnum
+                              .toString()
+                              .split('.')
+                              .last, // Passing user type
                         );
                       }
                     }
