@@ -14,7 +14,6 @@ class Registerscreen extends StatefulWidget {
 class _RegisterscreenState extends State<Registerscreen> {
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
-  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -69,28 +68,12 @@ class _RegisterscreenState extends State<Registerscreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _usernameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter a username";
-                    } else if (value.length <= 5) {
-                      return "Username must be longer than 5 letters";
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Enter your User Name',
-                    hintText: 'Enter your User Name',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
+                
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
                   validator: (value) {
-                    if (!EmailValidator.validate(value!)) {
+                    if (value == null || !EmailValidator.validate(value)) {
                       return "Invalid Email";
                     }
                     return null;
@@ -118,7 +101,9 @@ class _RegisterscreenState extends State<Registerscreen> {
                     labelText: 'Enter your Phone Number',
                     hintText: 'Enter your Phone Number',
                     border: OutlineInputBorder(),
+                    
                   ),
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -128,6 +113,10 @@ class _RegisterscreenState extends State<Registerscreen> {
                       return "Password field should not be empty";
                     } else if (value.length <= 6) {
                       return "Password should be longer than 6 letters";
+                    } else if (!RegExp(r'[A-Z]').hasMatch(value)){
+                      return "Password must contain at least one uppercase letter";
+                    } else if (!RegExp(r'[0-9]').hasMatch(value)){
+                      return "Password must contain at least one number";
                     }
                     return null;
                   },
@@ -179,33 +168,31 @@ class _RegisterscreenState extends State<Registerscreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      if (_userTypeEnum == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                           SnackBar(
-                            content: Text('Please select account type'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      } else {
-                        // Pass user's data for Authentication
-                        Authentication().signup(
-                          firstname: _firstnameController.text,
-                          lastname: _lastnameController.text,
-                          username: _usernameController.text,
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                          phoneNumber: _phoneController.text,
-                          context: context,
-                          userType: _userTypeEnum.toString().split('.').last, // Passing user type
-                        );
-                      }
-                    }
-                  },
-                  child: const Text('Register'),
-                ),
+                 ElevatedButton(  onPressed: () async {
+      if (_userTypeEnum == null) {
+      // Show a SnackBar when user type is not selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select account type'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else if (_formKey.currentState!.validate()) {
+      // Proceed with the signup if all fields and user type are valid
+      Authentication().signup(
+        firstname: _firstnameController.text,
+        lastname: _lastnameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        phoneNumber: _phoneController.text,
+        userType: _userTypeEnum.toString().split('.').last, // Passing user type
+        context: context,
+      );
+    }
+  },
+  child: const Text('Register'),
+)
+
               ],
             ),
           ),

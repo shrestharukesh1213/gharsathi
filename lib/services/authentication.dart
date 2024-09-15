@@ -6,7 +6,6 @@ class Authentication {
   Future<void> signup(
       {required String firstname,
       required String lastname,
-      required String username,
       required String email,
       required String password,
       required String userType,
@@ -23,7 +22,6 @@ class Authentication {
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'firstname': firstname,
         'lastname': lastname,
-        'username': username,
         'email': email,
         'usertype':userType,
         'phoneNumber':phoneNumber,
