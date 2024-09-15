@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gharsathi/services/authentication.dart';
 import 'package:email_validator/email_validator.dart';
 
+enum UserTypeEnum { Tenant, Landlord }
+
 class Registerscreen extends StatefulWidget {
   const Registerscreen({super.key});
 
@@ -16,6 +18,7 @@ class _RegisterscreenState extends State<Registerscreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  UserTypeEnum? _userTypeEnum; // To track selected user type
 
   @override
   Widget build(BuildContext context) {
@@ -111,24 +114,77 @@ class _RegisterscreenState extends State<Registerscreen> {
                   obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'Enter your password',
-                    hintText: 'Enter your password  ',
+                    hintText: 'Enter your password',
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 20),
+                // User Type Radio Buttons (Buyer or Seller) in a Row
+                const Text(
+                  'Select Account Type:',
+                  style: TextStyle(fontSize: 16),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile<UserTypeEnum>(
+                        contentPadding: EdgeInsets.all(0.0),
+                        value: UserTypeEnum.Tenant,
+                        groupValue: _userTypeEnum,
+                        tileColor: Colors.deepPurple.shade50 ,
+                        title: Text(UserTypeEnum.Tenant.name),
+                        onChanged: (UserTypeEnum? value) {
+                          setState(() {
+                            _userTypeEnum = value;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(width:5.0,),
+                    Expanded(
+                      child: RadioListTile<UserTypeEnum>(
+                        contentPadding: EdgeInsets.all(0.0),
+                        value: UserTypeEnum.Landlord,
+                        groupValue: _userTypeEnum,
+                         tileColor: Colors.deepPurple.shade50 ,
+                        title: Text(UserTypeEnum.Landlord.name),
+                        onChanged: (UserTypeEnum? value) {
+                          setState(() {
+                            _userTypeEnum = value;
+                          });
+                        },
+                      ),
+                    ),
+                    
+                  ],
+                ),
+                const SizedBox(height: 20),
                 ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      if (_userTypeEnum == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                           SnackBar(
+                            content: Text('Please select account type'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      } else {
+                        // Pass user's data for Authentication
                         Authentication().signup(
-                            firstname: _firstnameController.text,
-                            lastname: _lastnameController.text,
-                            username: _usernameController.text,
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                            context: context);
+                          firstname: _firstnameController.text,
+                          lastname: _lastnameController.text,
+                          username: _usernameController.text,
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                          context: context,
+                          userType: _userTypeEnum.toString().split('.').last, // Passing user type
+                        );
                       }
-                    },
-                    child: const Text('Register')),
+                    }
+                  },
+                  child: const Text('Register'),
+                ),
               ],
             ),
           ),
