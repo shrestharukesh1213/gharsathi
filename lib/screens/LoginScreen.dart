@@ -66,7 +66,7 @@ class _LoginscreenState extends State<Loginscreen> {
                 child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        Authentication().signin(
+                        Authentication().signIn(
                             email: _emailController.text,
                             password: _passwordController.text,
                             context: context);

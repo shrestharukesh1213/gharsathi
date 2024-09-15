@@ -12,8 +12,14 @@ class Registerscreen extends StatefulWidget {
 }
 
 class _RegisterscreenState extends State<Registerscreen> {
+<<<<<<< HEAD
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
+=======
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _userNameController = TextEditingController();
+>>>>>>> origin/main
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -32,7 +38,7 @@ class _RegisterscreenState extends State<Registerscreen> {
             child: Column(
               children: [
                 TextFormField(
-                  controller: _firstnameController,
+                  controller: _firstNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter a Firstname";
@@ -51,7 +57,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: _lastnameController,
+                  controller: _lastNameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter a Lastname";
@@ -68,7 +74,27 @@ class _RegisterscreenState extends State<Registerscreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
+<<<<<<< HEAD
                 
+=======
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _userNameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Enter a userName";
+                    } else if (value.length <= 5) {
+                      return "Username must be longer than 5 letters";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Enter your User Name',
+                    hintText: 'Enter your User Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+>>>>>>> origin/main
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
@@ -140,7 +166,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                         contentPadding: EdgeInsets.all(0.0),
                         value: UserTypeEnum.Tenant,
                         groupValue: _userTypeEnum,
-                        tileColor: Colors.deepPurple.shade50 ,
+                        tileColor: Colors.deepPurple.shade50,
                         title: Text(UserTypeEnum.Tenant.name),
                         onChanged: (UserTypeEnum? value) {
                           setState(() {
@@ -149,13 +175,15 @@ class _RegisterscreenState extends State<Registerscreen> {
                         },
                       ),
                     ),
-                    SizedBox(width:5.0,),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
                     Expanded(
                       child: RadioListTile<UserTypeEnum>(
                         contentPadding: EdgeInsets.all(0.0),
                         value: UserTypeEnum.Landlord,
                         groupValue: _userTypeEnum,
-                         tileColor: Colors.deepPurple.shade50 ,
+                        tileColor: Colors.deepPurple.shade50,
                         title: Text(UserTypeEnum.Landlord.name),
                         onChanged: (UserTypeEnum? value) {
                           setState(() {
@@ -164,10 +192,10 @@ class _RegisterscreenState extends State<Registerscreen> {
                         },
                       ),
                     ),
-                    
                   ],
                 ),
                 const SizedBox(height: 20),
+<<<<<<< HEAD
                  ElevatedButton(  onPressed: () async {
       if (_userTypeEnum == null) {
       // Show a SnackBar when user type is not selected
@@ -193,6 +221,38 @@ class _RegisterscreenState extends State<Registerscreen> {
   child: const Text('Register'),
 )
 
+=======
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      if (_userTypeEnum == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select account type'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      } else {
+                        // Pass user's data for Authentication
+                        Authentication().signUp(
+                          firstName: _firstNameController.text,
+                          lastName: _lastNameController.text,
+                          userName: _userNameController.text,
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                          phoneNumber: _phoneController.text,
+                          context: context,
+                          userType: _userTypeEnum
+                              .toString()
+                              .split('.')
+                              .last, // Passing user type
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Register'),
+                ),
+>>>>>>> origin/main
               ],
             ),
           ),
