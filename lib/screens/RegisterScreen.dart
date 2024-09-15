@@ -16,6 +16,7 @@ class _RegisterscreenState extends State<Registerscreen> {
   final _lastnameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   UserTypeEnum? _userTypeEnum; // To track selected user type
@@ -102,6 +103,25 @@ class _RegisterscreenState extends State<Registerscreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  controller: _phoneController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Enter phone number";
+                    } else if (value.contains(RegExp(r'[a-zA-Z]'))) {
+                      return "Should not contain alphabets";
+                    } else if (value.length != 10) {
+                      return "Phone number should be 10 digits";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Enter your Phone Number',
+                    hintText: 'Enter your Phone Number',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
                   controller: _passwordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -177,6 +197,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                           username: _usernameController.text,
                           email: _emailController.text,
                           password: _passwordController.text,
+                          phoneNumber: _phoneController.text,
                           context: context,
                           userType: _userTypeEnum.toString().split('.').last, // Passing user type
                         );

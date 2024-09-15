@@ -10,6 +10,7 @@ class Authentication {
       required String email,
       required String password,
       required String userType,
+      required String phoneNumber,
       required BuildContext context}) async {
     try {
       //Create User Account
@@ -25,6 +26,7 @@ class Authentication {
         'username': username,
         'email': email,
         'usertype':userType,
+        'phoneNumber':phoneNumber,
       });
 
       await Future.delayed(const Duration(seconds: 1));
