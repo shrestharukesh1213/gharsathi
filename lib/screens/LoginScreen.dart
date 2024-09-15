@@ -10,7 +10,7 @@ class Loginscreen extends StatefulWidget {
 }
 
 class _LoginscreenState extends State<Loginscreen> {
-  final _emailController = TextEditingController();
+  final _emailAndPhoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -28,7 +28,7 @@ class _LoginscreenState extends State<Loginscreen> {
           child: Column(
             children: [
               TextFormField(
-                controller: _emailController,
+                controller: _emailAndPhoneController,
                 validator: (value) {
                   if (!EmailValidator.validate(value!)) {
                     return "Invalid Email";
@@ -67,7 +67,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         Authentication().signIn(
-                            email: _emailController.text,
+                            email: _emailAndPhoneController.text,
                             password: _passwordController.text,
                             context: context);
                       }

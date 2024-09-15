@@ -12,14 +12,8 @@ class Registerscreen extends StatefulWidget {
 }
 
 class _RegisterscreenState extends State<Registerscreen> {
-<<<<<<< HEAD
-  final _firstnameController = TextEditingController();
-  final _lastnameController = TextEditingController();
-=======
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _userNameController = TextEditingController();
->>>>>>> origin/main
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -74,27 +68,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-<<<<<<< HEAD
-                
-=======
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _userNameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter a userName";
-                    } else if (value.length <= 5) {
-                      return "Username must be longer than 5 letters";
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Enter your User Name',
-                    hintText: 'Enter your User Name',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
->>>>>>> origin/main
+
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
@@ -127,7 +101,6 @@ class _RegisterscreenState extends State<Registerscreen> {
                     labelText: 'Enter your Phone Number',
                     hintText: 'Enter your Phone Number',
                     border: OutlineInputBorder(),
-                    
                   ),
                   keyboardType: TextInputType.number,
                 ),
@@ -139,9 +112,9 @@ class _RegisterscreenState extends State<Registerscreen> {
                       return "Password field should not be empty";
                     } else if (value.length <= 6) {
                       return "Password should be longer than 6 letters";
-                    } else if (!RegExp(r'[A-Z]').hasMatch(value)){
+                    } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
                       return "Password must contain at least one uppercase letter";
-                    } else if (!RegExp(r'[0-9]').hasMatch(value)){
+                    } else if (!RegExp(r'[0-9]').hasMatch(value)) {
                       return "Password must contain at least one number";
                     }
                     return null;
@@ -195,33 +168,6 @@ class _RegisterscreenState extends State<Registerscreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-<<<<<<< HEAD
-                 ElevatedButton(  onPressed: () async {
-      if (_userTypeEnum == null) {
-      // Show a SnackBar when user type is not selected
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select account type'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } else if (_formKey.currentState!.validate()) {
-      // Proceed with the signup if all fields and user type are valid
-      Authentication().signup(
-        firstname: _firstnameController.text,
-        lastname: _lastnameController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-        phoneNumber: _phoneController.text,
-        userType: _userTypeEnum.toString().split('.').last, // Passing user type
-        context: context,
-      );
-    }
-  },
-  child: const Text('Register'),
-)
-
-=======
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
@@ -237,7 +183,6 @@ class _RegisterscreenState extends State<Registerscreen> {
                         Authentication().signUp(
                           firstName: _firstNameController.text,
                           lastName: _lastNameController.text,
-                          userName: _userNameController.text,
                           email: _emailController.text,
                           password: _passwordController.text,
                           phoneNumber: _phoneController.text,
@@ -252,7 +197,6 @@ class _RegisterscreenState extends State<Registerscreen> {
                   },
                   child: const Text('Register'),
                 ),
->>>>>>> origin/main
               ],
             ),
           ),
