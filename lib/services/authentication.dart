@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Authentication {
-
   Future<void> signUp(
       {required String firstName,
       required String lastName,
@@ -29,7 +28,7 @@ class Authentication {
       });
 
       await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushNamed(context, '/navbar');
+      Navigator.pushNamed(context, '/tenantnavbar');
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {
@@ -52,7 +51,7 @@ class Authentication {
           .signInWithEmailAndPassword(email: email, password: password);
 
       await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushNamed(context, '/navbar');
+      Navigator.pushNamed(context, '/tenantnavbar');
     } on FirebaseAuthException catch (e) {
       String message = e.code;
       ScaffoldMessenger.of(context)

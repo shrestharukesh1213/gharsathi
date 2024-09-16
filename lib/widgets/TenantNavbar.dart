@@ -38,13 +38,6 @@ class _TenantnavbarState extends State<Tenantnavbar> {
             selectedColor: Colors.purple,
           ),
 
-          /// Home
-          SalomonBottomBarItem(
-            icon: const Icon(Icons.add),
-            title: const Text("Add"),
-            selectedColor: Colors.purple,
-          ),
-
           /// Saved
           SalomonBottomBarItem(
             icon: const Icon(Icons.favorite_border_outlined),
@@ -54,14 +47,14 @@ class _TenantnavbarState extends State<Tenantnavbar> {
 
           ///Chat
           SalomonBottomBarItem(
-            icon: const Icon(Icons.person),
+            icon: const Icon(Icons.chat),
             title: const Text("Profile"),
             selectedColor: Colors.teal,
           ),
 
           /// Profile
           SalomonBottomBarItem(
-            icon: const Icon(Icons.chat),
+            icon: const Icon(Icons.person),
             title: const Text("Chat"),
             selectedColor: Colors.pink,
           ),
