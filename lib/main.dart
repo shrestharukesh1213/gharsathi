@@ -1,16 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/firebase_options.dart';
-import 'package:gharsathi/screens/AddScreen.dart';
-import 'package:gharsathi/screens/ChatScreen.dart';
-import 'package:gharsathi/screens/HomeScreen.dart';
+import 'package:gharsathi/screens/LandlordChatScreen.dart';
+import 'package:gharsathi/screens/LandlordHomeScreen.dart';
+import 'package:gharsathi/screens/LandlordProfileScreen.dart';
 import 'package:gharsathi/screens/LoginScreen.dart';
-import 'package:gharsathi/screens/ProfileScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
-import 'package:gharsathi/screens/SavedScreen.dart';
 import 'package:gharsathi/screens/SplashScreen.dart';
-import 'package:gharsathi/screens/TenantScreen.dart';
-import 'package:gharsathi/widgets/Navbar.dart';
+import 'package:gharsathi/screens/TenantChatScreen.dart';
+import 'package:gharsathi/screens/TenantHomeScreen.dart';
+import 'package:gharsathi/screens/TenantProfileScreen.dart';
+import 'package:gharsathi/screens/TenantSavedScreen.dart';
+import 'package:gharsathi/widgets/LandlordNavbar.dart';
+import 'package:gharsathi/widgets/TenantNavbar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,13 +34,15 @@ class MyApp extends StatelessWidget {
         '/': (context) => Splashscreen(),
         '/login': (context) => Loginscreen(),
         '/register': (context) => Registerscreen(),
-        '/home': (context) => Homescreen(),
-        '/add': (context) => Addscreen(),
-        '/saved': (context) => Savedscreen(),
-        '/chat': (context) => Chatscreen(),
-        '/profile': (context) => Profilescreen(),
-        '/navbar': (context) => Navbar(),
-        '/tenant': (context) => Tenantscreen(),
+        '/landlordnavbar': (context) => Landlordnavbar(),
+        '/tenantnavbar': (context) => Tenantnavbar(),
+        '/landlordhome': (context) => Landlordhomescreen(),
+        '/landlordchat': (context) => Landlordchatscreen(),
+        '/landlordprofile': (context) => Landlordprofilescreen(),
+        '/tenanthome': (context) => Tenanthomescreen(),
+        '/tenantsaved': (context) => Tenantsavedscreen(),
+        '/tenantchat': (context) => Tenantchatscreen(),
+        '/tenantprofile': (context) => Tenantprofilescreen(),
       },
     );
   }
