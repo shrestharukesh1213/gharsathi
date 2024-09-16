@@ -12,8 +12,9 @@ class Registerscreen extends StatefulWidget {
 }
 
 class _RegisterscreenState extends State<Registerscreen> {
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
+
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -32,7 +33,7 @@ class _RegisterscreenState extends State<Registerscreen> {
             child: Column(
               children: [
                 TextFormField(
-                  controller: _firstNameController,
+                  controller: _firstnameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter a Firstname";
@@ -51,7 +52,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: _lastNameController,
+                  controller: _lastnameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter a Lastname";
@@ -139,7 +140,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                         contentPadding: EdgeInsets.all(0.0),
                         value: UserTypeEnum.Tenant,
                         groupValue: _userTypeEnum,
-                        tileColor: Colors.deepPurple.shade50,
+                        tileColor: Colors.deepPurple.shade50 ,
                         title: Text(UserTypeEnum.Tenant.name),
                         onChanged: (UserTypeEnum? value) {
                           setState(() {
@@ -148,15 +149,13 @@ class _RegisterscreenState extends State<Registerscreen> {
                         },
                       ),
                     ),
-                    const SizedBox(
-                      width: 5.0,
-                    ),
+                    SizedBox(width:5.0,),
                     Expanded(
                       child: RadioListTile<UserTypeEnum>(
                         contentPadding: EdgeInsets.all(0.0),
                         value: UserTypeEnum.Landlord,
                         groupValue: _userTypeEnum,
-                        tileColor: Colors.deepPurple.shade50,
+                         tileColor: Colors.deepPurple.shade50 ,
                         title: Text(UserTypeEnum.Landlord.name),
                         onChanged: (UserTypeEnum? value) {
                           setState(() {
@@ -165,38 +164,35 @@ class _RegisterscreenState extends State<Registerscreen> {
                         },
                       ),
                     ),
+                    
                   ],
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      if (_userTypeEnum == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Please select account type'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      } else {
-                        // Pass user's data for Authentication
-                        Authentication().signUp(
-                          firstName: _firstNameController.text,
-                          lastName: _lastNameController.text,
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                          phoneNumber: _phoneController.text,
-                          context: context,
-                          userType: _userTypeEnum
-                              .toString()
-                              .split('.')
-                              .last, // Passing user type
-                        );
-                      }
-                    }
-                  },
-                  child: const Text('Register'),
-                ),
+                 ElevatedButton(  onPressed: () async {
+      if (_userTypeEnum == null) {
+      // Show a SnackBar when user type is not selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select account type'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else if (_formKey.currentState!.validate()) {
+      // Proceed with the signup if all fields and user type are valid
+      Authentication().signUp(
+        firstName: _firstnameController.text,
+        lastName: _lastnameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        phoneNumber: _phoneController.text,
+        userType: _userTypeEnum.toString().split('.').last, // Passing user type
+        context: context,
+      );
+    }
+  },
+  child: const Text('Register'),
+)
+
               ],
             ),
           ),
