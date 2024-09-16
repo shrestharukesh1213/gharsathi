@@ -35,13 +35,6 @@ class _LandlordnavbarState extends State<Landlordnavbar> {
             selectedColor: Colors.purple,
           ),
 
-          /// Home
-          SalomonBottomBarItem(
-            icon: const Icon(Icons.add),
-            title: const Text("Add"),
-            selectedColor: Colors.purple,
-          ),
-
           /// Profile
           SalomonBottomBarItem(
             icon: const Icon(Icons.chat),
