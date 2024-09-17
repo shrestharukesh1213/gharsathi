@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
 
 class Authentication {
+  final Stream<QuerySnapshot> users =
+      FirebaseFirestore.instance.collection("users").snapshots();
+
   Future<void> signUp(
       {required String firstName,
       required String lastName,
@@ -29,9 +32,9 @@ class Authentication {
       });
 
       //Sends to Tenant or Landlord screen depending on user type
-      if (userType == UserTypeEnum.Tenant) {
+      if (userType == UserTypeEnum.Tenant.name) {
         Navigator.pushNamed(context, '/tenantnavbar');
-      } else if (userType == UserTypeEnum.Landlord) {
+      } else if (userType == UserTypeEnum.Landlord.name) {
         Navigator.pushNamed(context, '/landlordnavbar');
       }
     } on FirebaseAuthException catch (e) {
@@ -52,10 +55,28 @@ class Authentication {
       required BuildContext context}) async {
     try {
       //Login to your account
-      await FirebaseAuth.instance
+      UserCredential signIn = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      Navigator.pushNamed(context, '/navbar');
+      String uidForSignIn = signIn.user!.uid;
+
+      //Fetch user document from firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uidForSignIn)
+          .get();
+
+      //Checks if userdocument exists
+      if (userDoc.exists) {
+        //Retrieving usertype from firestore
+        String userTypeForSignIn = userDoc['usertype'];
+
+        if (userTypeForSignIn == UserTypeEnum.Tenant.name) {
+          Navigator.pushNamed(context, '/tenantnavbar');
+        } else if (userTypeForSignIn == UserTypeEnum.Landlord.name) {
+          Navigator.pushNamed(context, '/landlordnavbar');
+        }
+      }
     } on FirebaseAuthException catch (e) {
       String message = e.code;
       ScaffoldMessenger.of(context)
