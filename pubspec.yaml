@@ -41,6 +41,10 @@ dependencies:
   cloud_firestore: ^5.4.0
   email_validator: ^3.0.0
 
+  #Added provider and shared_preferences package
+  provider: ^6.0.5 
+  shared_preferences: ^2.0.15
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
