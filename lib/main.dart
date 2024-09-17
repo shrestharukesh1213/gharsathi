@@ -5,6 +5,7 @@ import 'package:gharsathi/screens/LandlordChatScreen.dart';
 import 'package:gharsathi/screens/LandlordHomeScreen.dart';
 import 'package:gharsathi/screens/LandlordProfileScreen.dart';
 import 'package:gharsathi/screens/LoginScreen.dart';
+import 'package:gharsathi/screens/OtpVerificationScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
 import 'package:gharsathi/screens/SplashScreen.dart';
 import 'package:gharsathi/screens/TenantChatScreen.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/otp',
       routes: {
         '/': (context) => Splashscreen(),
         '/login': (context) => Loginscreen(),
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         '/tenantchat': (context) => Tenantchatscreen(),
         '/tenantprofile': (context) => Tenantprofilescreen(),
         '/tenantpreference': (context) => Tenantpreferencescreen(),
+        '/otp': (context) => Otpverificationscreen(),
       },
     );
   }

@@ -10,6 +10,8 @@ class Otpverificationscreen extends StatefulWidget {
 class _OtpverificationscreenState extends State<Otpverificationscreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      
+    );
   }
 }
