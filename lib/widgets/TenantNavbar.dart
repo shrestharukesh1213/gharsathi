@@ -48,14 +48,14 @@ class _TenantnavbarState extends State<Tenantnavbar> {
           ///Chat
           SalomonBottomBarItem(
             icon: const Icon(Icons.chat),
-            title: const Text("Profile"),
+            title: const Text("Chat"),
             selectedColor: Colors.teal,
           ),
 
           /// Profile
           SalomonBottomBarItem(
             icon: const Icon(Icons.person),
-            title: const Text("Chat"),
+            title: const Text("Profile"),
             selectedColor: Colors.pink,
           ),
         ],

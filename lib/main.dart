@@ -9,6 +9,7 @@ import 'package:gharsathi/screens/RegisterScreen.dart';
 import 'package:gharsathi/screens/SplashScreen.dart';
 import 'package:gharsathi/screens/TenantChatScreen.dart';
 import 'package:gharsathi/screens/TenantHomeScreen.dart';
+import 'package:gharsathi/screens/TenantPreferenceScreen.dart';
 import 'package:gharsathi/screens/TenantProfileScreen.dart';
 import 'package:gharsathi/screens/TenantSavedScreen.dart';
 import 'package:gharsathi/widgets/LandlordNavbar.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/tenantsaved': (context) => Tenantsavedscreen(),
         '/tenantchat': (context) => Tenantchatscreen(),
         '/tenantprofile': (context) => Tenantprofilescreen(),
+        '/tenantpreference': (context) => Tenantpreferencescreen(),
       },
     );
   }
