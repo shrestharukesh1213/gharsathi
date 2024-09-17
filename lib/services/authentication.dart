@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gharsathi/screens/RegisterScreen.dart';
 
 class Authentication {
   Future<void> signUp(
@@ -27,8 +28,12 @@ class Authentication {
         'phoneNumber': phoneNumber,
       });
 
-      await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushNamed(context, '/tenantnavbar');
+      //Sends to Tenant or Landlord screen depending on user type
+      if (userType == UserTypeEnum.Tenant) {
+        Navigator.pushNamed(context, '/tenantnavbar');
+      } else if (userType == UserTypeEnum.Landlord) {
+        Navigator.pushNamed(context, '/landlordnavbar');
+      }
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {
@@ -50,8 +55,7 @@ class Authentication {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushNamed(context, '/tenantnavbar');
+      Navigator.pushNamed(context, '/navbar');
     } on FirebaseAuthException catch (e) {
       String message = e.code;
       ScaffoldMessenger.of(context)
