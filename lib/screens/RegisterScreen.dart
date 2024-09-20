@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/services/authentication.dart';
 import 'package:email_validator/email_validator.dart';
@@ -19,6 +20,18 @@ class _RegisterscreenState extends State<Registerscreen> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  Country selectedCountry = Country(
+    phoneCode: "977", 
+    countryCode: "NP", 
+    e164Sc: 0, 
+    geographic: true, 
+    level: 1, 
+    name: "Nepal", 
+    example: "Nepal", 
+    displayName: "Nepal", 
+    displayNameNoCountryCode: "NP", 
+    e164Key: "");
+
   UserTypeEnum? _userTypeEnum; // To track selected user type
 
   @override
@@ -56,8 +69,8 @@ class _RegisterscreenState extends State<Registerscreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter a Lastname";
-                    } else if (value.length <= 3) {
-                      return "Last name must be longer than 3 letters";
+                    } else if (value.length <= 2) {
+                      return "Last name must be longer than 2 letters";
                     } else if (value.contains(RegExp(r'[0-9]'))) {
                       return "Last name should not contain numbers";
                     }
@@ -89,22 +102,44 @@ class _RegisterscreenState extends State<Registerscreen> {
                 TextFormField(
                   controller: _phoneController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter phone number";
-                    } else if (value.contains(RegExp(r'[a-zA-Z]'))) {
-                      return "Should not contain alphabets";
-                    } else if (value.length != 10) {
-                      return "Phone number should be 10 digits";
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Enter your Phone Number',
-                    hintText: 'Enter your Phone Number',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
+                  if (value == null || value.isEmpty) {
+                   return "Enter phone number";
+                   } else if (value.contains(RegExp(r'[a-zA-Z]'))) {
+                    return "Should not contain alphabets";
+                   } else if (value.length != 10) {
+                    return "Phone number should be 10 digits";
+                   }
+                  return null;
+                   },
+                   decoration: InputDecoration(
+                     labelText: 'Enter Phone Number',
+                     hintText: 'Enter Phone Number',
+                     border: const OutlineInputBorder(),
+                     prefixIcon: Container(
+                     padding: const EdgeInsets.all(8.0),
+                     child: InkWell(
+                      onTap: () {
+                        showCountryPicker(
+                          context: context,
+                          countryListTheme: const CountryListThemeData(bottomSheetHeight:550),
+                          onSelect: (value){
+                          setState((){
+                            selectedCountry =value;
+                          });
+                        });
+                        
+                      },
+                        child: Text("${selectedCountry.flagEmoji} + ${selectedCountry.phoneCode}",
+                        style: const TextStyle(fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,)), 
+                        ),
+                        ),
+                        ),
+      
+                        keyboardType: TextInputType.number,
+                    ),
+
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _passwordController,
@@ -128,7 +163,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // User Type Radio Buttons (Buyer or Seller) in a Row
+                // User Type Radio Buttons (Tenant or Landlord) in a Row
                 const Text(
                   'Select Account Type:',
                   style: TextStyle(fontSize: 16),

@@ -15,6 +15,8 @@ import 'package:gharsathi/screens/TenantProfileScreen.dart';
 import 'package:gharsathi/screens/TenantSavedScreen.dart';
 import 'package:gharsathi/widgets/LandlordNavbar.dart';
 import 'package:gharsathi/widgets/TenantNavbar.dart';
+import 'package:gharsathi/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,25 +31,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => Splashscreen(),
-        '/login': (context) => Loginscreen(),
-        '/register': (context) => Registerscreen(),
-        '/landlordnavbar': (context) => Landlordnavbar(),
-        '/tenantnavbar': (context) => Tenantnavbar(),
-        '/landlordhome': (context) => Landlordhomescreen(),
-        '/landlordchat': (context) => Landlordchatscreen(),
-        '/landlordprofile': (context) => Landlordprofilescreen(),
-        '/tenanthome': (context) => Tenanthomescreen(),
-        '/tenantsaved': (context) => Tenantsavedscreen(),
-        '/tenantchat': (context) => Tenantchatscreen(),
-        '/tenantprofile': (context) => Tenantprofilescreen(),
-        '/tenantpreference': (context) => Tenantpreferencescreen(),
-        '/otp': (context) => Otpverificationscreen(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/register',
+        routes: {
+          '/': (context) => Splashscreen(),
+          '/login': (context) => Loginscreen(),
+          '/register': (context) => Registerscreen(),
+          '/landlordnavbar': (context) => Landlordnavbar(),
+          '/tenantnavbar': (context) => Tenantnavbar(),
+          '/landlordhome': (context) => Landlordhomescreen(),
+          '/landlordchat': (context) => Landlordchatscreen(),
+          '/landlordprofile': (context) => Landlordprofilescreen(),
+          '/tenanthome': (context) => Tenanthomescreen(),
+          '/tenantsaved': (context) => Tenantsavedscreen(),
+          '/tenantchat': (context) => Tenantchatscreen(),
+          '/tenantprofile': (context) => Tenantprofilescreen(),
+          '/tenantpreference': (context) => Tenantpreferencescreen(),
+          // '/otp': (context) => Otpverificationscreen(),
+        },
+      ),
     );
   }
 }
