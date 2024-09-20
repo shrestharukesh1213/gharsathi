@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Otpverificationscreen extends StatefulWidget {
-  const Otpverificationscreen({super.key});
+  const Otpverificationscreen({super.key, required this.verificationId});
+  final String verificationId;
+
 
   @override
   State<Otpverificationscreen> createState() => _OtpverificationscreenState();

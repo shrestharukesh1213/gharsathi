@@ -44,6 +44,7 @@ dependencies:
   #Added provider and shared_preferences package
   provider: ^6.0.5 
   shared_preferences: ^2.0.15
+  country_picker: ^2.0.26
 
 dev_dependencies:
   flutter_test:
