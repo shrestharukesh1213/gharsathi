@@ -17,7 +17,7 @@ class Rooms {
   Map<String, dynamic> toJson() {
     return {
       'name': roomTitle,
-      'category': location,
+      'location': location,
       'price': price,
       'description': description,
       'images': images,

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/landlordnavbar',
+        initialRoute: '/',
         routes: {
           '/': (context) => Splashscreen(),
           '/login': (context) => Loginscreen(),
