@@ -19,6 +19,7 @@ import 'package:gharsathi/widgets/TenantNavbar.dart';
 import 'package:gharsathi/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
