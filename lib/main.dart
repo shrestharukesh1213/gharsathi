@@ -5,7 +5,7 @@ import 'package:gharsathi/screens/LandlordChatScreen.dart';
 import 'package:gharsathi/screens/LandlordHomeScreen.dart';
 import 'package:gharsathi/screens/LandlordProfileScreen.dart';
 import 'package:gharsathi/screens/LoginScreen.dart';
-import 'package:gharsathi/screens/OtpVerificationScreen.dart';
+// import 'package:gharsathi/screens/OtpVerificationScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
 import 'package:gharsathi/screens/SplashScreen.dart';
 import 'package:gharsathi/screens/TenantChatScreen.dart';
@@ -32,13 +32,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
-      providers:[
-        ChangeNotifierProvider(create: (_)=>AuthProvider()),
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
-        
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
