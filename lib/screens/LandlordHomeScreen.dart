@@ -75,7 +75,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Post a Room'),
+        title: Text('Post a Room Rent'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
