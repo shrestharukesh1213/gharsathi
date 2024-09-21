@@ -8,7 +8,7 @@ class Roomservices {
   Future<String?> uploadImage(File imageFile) async {
     try {
       // path to storage
-      final path = 'products/${DateTime.now()}.png';
+      final path = 'rooms/${DateTime.now()}.png';
       final file = File(imageFile.path);
       final ref = firebase_storage.FirebaseStorage.instance.ref().child(path);
       await ref.putFile(file);
