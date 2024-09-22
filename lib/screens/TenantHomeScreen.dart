@@ -37,11 +37,14 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                   } else {
                     final data = snapshot.data!.docs;
 
-                    return GridView.count(
-                        crossAxisCount: 1,
+                    return ListView.builder(
+                        // crossAxisCount: 1,
+                        // childAspectRatio: 0.5,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        children: List.generate(data.length, (index) {
+                        itemCount: data.length,
+                        // children: List.generate(data.length, (index)
+                        itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(context, "/details",
@@ -61,7 +64,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                               image: data[index]['images'][0],
                             ),
                           );
-                        }));
+                        });
                   }
                 })
           ],
