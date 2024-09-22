@@ -9,17 +9,21 @@ class Roomdetails extends StatefulWidget {
 }
 
 class _RoomdetailsState extends State<Roomdetails> {
-  final List<String> images = [
-    'https://media.designcafe.com/wp-content/uploads/2020/02/21010931/black-bedroom-wooden-panel-stripes.jpg',
-    'https://api.gharpedia.com/wp-content/uploads/2020/05/Contemporary-Dark-Kitchen-02-0503070022.jpg',
-    'https://img.freepik.com/premium-photo/modern-living-room-filled-with-furniture-large-window-modern-gray-dark-theme-ai-generation_295714-7099.jpg',
-    'https://img.freepik.com/free-photo/minimalist-black-interior-with-black-sofa_1268-31786.jpg',
-  ];
+  final List<String> images = [];
   @override
   Widget build(BuildContext context) {
+    final data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+
+    final String roomTitle = data['roomTitle'];
+    final String location = data['location'];
+    final String price = data['price'];
+    final String description = data['description'];
+    final List<String> images = List<String>.from(data['images']);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Room Screen '),
+        title: Text(roomTitle),
         centerTitle: true,
       ),
       body: Column(
@@ -40,6 +44,35 @@ class _RoomdetailsState extends State<Roomdetails> {
               );
             },
           )),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Location: $location',
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Price: Rs.$price',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Description:\n $description',
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );

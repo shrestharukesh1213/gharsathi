@@ -48,14 +48,15 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                           return GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
-                                context, "/details",
-                                // arguments: {
-                                //   "roomTitle": data[index]['roomTitle'],
-                                //   "location": data[index]['location'],
-                                //   "price": data[index]['price'],
-                                //   "description": data[index]['description'],
-                                //   "images": data[index]['images'],
-                                // },
+                                context,
+                                "/details",
+                                arguments: {
+                                  "roomTitle": data[index]['name'],
+                                  "location": data[index]['location'],
+                                  "price": data[index]['price'],
+                                  "description": data[index]['description'],
+                                  "images": data[index]['images'],
+                                },
                               );
                             },
                             child: Roomcard(
