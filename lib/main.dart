@@ -7,6 +7,7 @@ import 'package:gharsathi/screens/LandlordProfileScreen.dart';
 import 'package:gharsathi/screens/LoginScreen.dart';
 // import 'package:gharsathi/screens/OtpVerificationScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
+import 'package:gharsathi/screens/RoomDetails.dart';
 import 'package:gharsathi/screens/SplashScreen.dart';
 import 'package:gharsathi/screens/TenantChatScreen.dart';
 import 'package:gharsathi/screens/TenantHomeScreen.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
           '/tenantchat': (context) => Tenantchatscreen(),
           '/tenantprofile': (context) => Tenantprofilescreen(),
           '/tenantpreference': (context) => Tenantpreferencescreen(),
+          '/details': (context) => Roomdetails(),
           // '/otp': (context) => Otpverificationscreen(),
         },
       ),
