@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/model/Rooms.dart';
 import 'package:gharsathi/services/RoomServices.dart';
@@ -40,7 +41,10 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   final descriptionController = TextEditingController();
   final imageController = TextEditingController();
 
+  User? user = FirebaseAuth.instance.currentUser;
+
   String roomTitle = '';
+  String? postedBy = '';
   String location = '';
   double price = 0;
   String description = '';
@@ -57,6 +61,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
     }
     final room = Rooms(
       roomTitle: titleController.text,
+      postedBy: user!.displayName,
       location: locationController.text,
       price: priceController.text,
       description: descriptionController.text,

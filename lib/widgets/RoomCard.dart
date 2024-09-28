@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 
 class Roomcard extends StatefulWidget {
   final String roomTitle;
+  final String postedBy;
   final String description;
   final String location;
   final String price;
   final String image;
 
-  const Roomcard(
-      {required this.roomTitle,
-      required this.description,
-      required this.location,
-      required this.price,
-      required this.image,
-      super.key});
+  const Roomcard({
+    required this.roomTitle,
+    required this.postedBy,
+    required this.description,
+    required this.location,
+    required this.price,
+    required this.image,
+    super.key,
+  });
 
   @override
   State<Roomcard> createState() => _RoomcardState();

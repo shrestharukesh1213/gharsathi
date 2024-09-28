@@ -20,6 +20,13 @@ class Authentication {
       UserCredential signUp = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
+      //Update User Display Name
+      User? user = signUp.user;
+      if (user != null) {
+        await user.updateDisplayName("$firstName $lastName");
+        await user.reload();
+      }
+
       String userId = signUp.user!.uid;
 
       //Store User data in firestore
@@ -46,7 +53,10 @@ class Authentication {
       }
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)));
-    } catch (e) {}
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
   Future<void> signIn(

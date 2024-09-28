@@ -16,6 +16,7 @@ class _RoomdetailsState extends State<Roomdetails> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
     final String roomTitle = data['roomTitle'];
+    final String postedBy = data['postedBy'];
     final String location = data['location'];
     final String price = data['price'];
     final String description = data['description'];
@@ -59,6 +60,14 @@ class _RoomdetailsState extends State<Roomdetails> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
+                  'Posted By: $postedBy',
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
                   'Price: Rs.$price',
                   style: const TextStyle(fontSize: 20),
                 ),
@@ -71,6 +80,32 @@ class _RoomdetailsState extends State<Roomdetails> {
                   style: const TextStyle(fontSize: 20),
                 ),
               ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: const ButtonStyle(
+                          textStyle:
+                              WidgetStatePropertyAll(TextStyle(fontSize: 20))),
+                      child: const Text("Book Room"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: const ButtonStyle(
+                          textStyle:
+                              WidgetStatePropertyAll(TextStyle(fontSize: 20))),
+                      child: const Text("Contact Owner"),
+                    ),
+                  )
+                ],
+              )
             ],
           )
         ],

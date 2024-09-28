@@ -1,5 +1,6 @@
 class Rooms {
   String? roomTitle;
+  String? postedBy;
   String? location;
   String? price;
   String? description;
@@ -7,6 +8,7 @@ class Rooms {
 
   Rooms({
     this.roomTitle,
+    this.postedBy,
     this.location,
     this.price,
     this.description,
@@ -17,6 +19,7 @@ class Rooms {
   Map<String, dynamic> toJson() {
     return {
       'name': roomTitle,
+      'postedBy': postedBy,
       'location': location,
       'price': price,
       'description': description,

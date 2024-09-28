@@ -52,6 +52,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                                 "/details",
                                 arguments: {
                                   "roomTitle": data[index]['name'],
+                                  "postedBy": data[index]['postedBy'],
                                   "location": data[index]['location'],
                                   "price": data[index]['price'],
                                   "description": data[index]['description'],
@@ -61,6 +62,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                             },
                             child: Roomcard(
                               roomTitle: data[index]['name'],
+                              postedBy: data[index]['postedBy'],
                               location: data[index]['location'],
                               price: data[index]['price'],
                               description: data[index]['description'],
