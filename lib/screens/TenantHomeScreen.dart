@@ -15,6 +15,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Rent a room'),
       ),
       body: SingleChildScrollView(

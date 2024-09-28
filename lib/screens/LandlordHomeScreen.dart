@@ -81,6 +81,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Post a Room Rent'),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
