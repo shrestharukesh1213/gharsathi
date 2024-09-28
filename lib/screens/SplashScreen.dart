@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gharsathi/screens/RegisterScreen.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
@@ -12,17 +14,36 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   void initState() {
     super.initState();
-    _checkAuthState();
+    _checkUserSession(); // Check user session when splash screen loads
   }
 
-  // Check if a user is already logged in
-  void _checkAuthState() async {
-    await Future.delayed(const Duration(seconds: 2)); // Add some delay for splash screen
-    User? user = FirebaseAuth.instance.currentUser;
+  // Method to check user session and decide where to navigate
+  Future<void> _checkUserSession() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      // User is logged in, navigate to the relevant home screen
-      Navigator.pushReplacementNamed(context, '/tenantnavbar'); // or '/landlordnavbar' if user is a landlord
+    if (currentUser != null) {
+      // User is logged in, fetch their role from Firestore
+      String uid = currentUser.uid;
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .get();
+
+      if (userDoc.exists) {
+        // Get the user role
+        String userType = userDoc['usertype'];
+
+        // Navigate to the appropriate screen based on user role
+        if (userType == UserTypeEnum.Tenant.name) {
+          Navigator.pushReplacementNamed(context, '/tenantnavbar');
+        } else if (userType == UserTypeEnum.Landlord.name) {
+          Navigator.pushReplacementNamed(context, '/landlordnavbar');
+        }
+      } else {
+        // If user document doesn't exist, log out and navigate to login screen
+        FirebaseAuth.instance.signOut();
+        Navigator.pushReplacementNamed(context, '/login');
+      }
     } else {
       // User is not logged in, navigate to login screen
       Navigator.pushReplacementNamed(context, '/login');
