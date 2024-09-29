@@ -20,6 +20,7 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tenant Profile'),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

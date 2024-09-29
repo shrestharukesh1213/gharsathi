@@ -22,6 +22,7 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
+        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       body: Padding(
