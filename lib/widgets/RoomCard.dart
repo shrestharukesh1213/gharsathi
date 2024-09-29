@@ -7,9 +7,11 @@ class Roomcard extends StatefulWidget {
   final String location;
   final String price;
   final String image;
+  final List<dynamic> amenities;
 
   const Roomcard({
     required this.roomTitle,
+    required this.amenities,
     required this.postedBy,
     required this.description,
     required this.location,

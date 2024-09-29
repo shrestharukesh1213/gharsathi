@@ -16,7 +16,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Rent a room'),
+        title: const Text('Rent a room'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -58,17 +58,18 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                                   "price": data[index]['price'],
                                   "description": data[index]['description'],
                                   "images": data[index]['images'],
+                                  "amenities": data[index]['amenities']
                                 },
                               );
                             },
                             child: Roomcard(
-                              roomTitle: data[index]['name'],
-                              postedBy: data[index]['postedBy'],
-                              location: data[index]['location'],
-                              price: data[index]['price'],
-                              description: data[index]['description'],
-                              image: data[index]['images'][0],
-                            ),
+                                roomTitle: data[index]['name'],
+                                postedBy: data[index]['postedBy'],
+                                location: data[index]['location'],
+                                price: data[index]['price'],
+                                description: data[index]['description'],
+                                image: data[index]['images'][0],
+                                amenities: data[index]['amenities']),
                           );
                         });
                   }
