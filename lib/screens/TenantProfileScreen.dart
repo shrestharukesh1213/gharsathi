@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gharsathi/services/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Tenantprofilescreen extends StatefulWidget {
   const Tenantprofilescreen({super.key});
@@ -11,14 +12,20 @@ class Tenantprofilescreen extends StatefulWidget {
 class _TenantprofilescreenState extends State<Tenantprofilescreen> {
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    final name = user!.displayName;
+    final email = user.email;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tenant Profile'),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
@@ -28,6 +35,26 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
                 ),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Name: $name",
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    "Email: $email",
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 20),
           ListTile(

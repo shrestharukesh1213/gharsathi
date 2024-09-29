@@ -22,11 +22,12 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
+        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
