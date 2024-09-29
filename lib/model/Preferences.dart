@@ -1,4 +1,6 @@
 class Preferences {
+  String? user;
+  String? uid;
   String? location;
   double? distance;
   Map<String, int>? priceRange;
@@ -6,6 +8,8 @@ class Preferences {
   List<String>? amenities;
 
   Preferences({
+    this.user,
+    this.uid,
     this.location,
     this.distance,
     this.priceRange,
@@ -16,6 +20,8 @@ class Preferences {
   // Convert preferences data to JSON format
   Map<String, dynamic> toJson() {
     return {
+      'user': user,
+      'uid': uid,
       'location': location,
       'distance': distance,
       'priceRange': priceRange,
