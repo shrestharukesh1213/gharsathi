@@ -10,6 +10,9 @@ class Splashscreen extends StatefulWidget {
 }
 
 class _SplashscreenState extends State<Splashscreen> {
+  bool _isCheckingSession = true; // Variable to track session checking status
+  bool _isLoggedIn = false;       // Variable to track login status
+
   @override
   void initState() {
     super.initState();
@@ -33,43 +36,48 @@ class _SplashscreenState extends State<Splashscreen> {
           // Get the user role
           String userType = userDoc['usertype'];
 
-          // Delay the navigation to avoid Navigator issues
+          // Navigate to the appropriate screen based on user role
           Future.delayed(Duration.zero, () {
-            // Navigate to the appropriate screen based on user role
             if (userType == 'Tenant') {
               Navigator.pushReplacementNamed(context, '/tenanthome');
             } else if (userType == 'Landlord') {
               Navigator.pushReplacementNamed(context, '/landlordhome');
-            } else {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, '/login');
             }
           });
         } else {
-          // If user document doesn't exist, log out and navigate to login screen
           FirebaseAuth.instance.signOut();
-          Future.delayed(Duration.zero, () {
-            Navigator.pushReplacementNamed(context, '/login');
+          setState(() {
+            _isLoggedIn = false;
+            _isCheckingSession = false;
           });
         }
       } catch (e) {
-        // Handle any error (e.g., network issues or Firestore errors)
         print('Error checking user session: $e');
         FirebaseAuth.instance.signOut();
-        Future.delayed(Duration.zero, () {
-          Navigator.pushReplacementNamed(context, '/login');
+        setState(() {
+          _isLoggedIn = false;
+          _isCheckingSession = false;
         });
       }
     } else {
-      // User is not logged in, navigate to login screen
-      Future.delayed(Duration.zero, () {
-        Navigator.pushReplacementNamed(context, '/login');
+      // User is not logged in
+      setState(() {
+        _isLoggedIn = false;
+        _isCheckingSession = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isCheckingSession) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(), // Show loading while checking session
+        ),
+      );
+    }
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -85,6 +93,14 @@ class _SplashscreenState extends State<Splashscreen> {
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
           ),
+          const SizedBox(height: 20),
+          if (!_isLoggedIn)
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              child: const Text('Get Started'),
+            ),
         ],
       ),
     );
