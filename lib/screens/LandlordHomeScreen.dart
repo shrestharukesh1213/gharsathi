@@ -67,6 +67,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
 
   final _formKey = GlobalKey<FormState>();
   void addRooms() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
     List<String?> uploadedUrls = [];
     // Collect selected amenities
     List<String> selectedAmenities = [];
@@ -86,11 +87,11 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
     final room = Rooms(
       roomTitle: titleController.text,
       postedBy: user!.displayName,
+      posterUid: currentUser!.uid,
       location: locationController.text,
       price: priceController.text,
       description: descriptionController.text,
       amenities: selectedAmenities, // Add amenities to room object
-
       images: uploadedUrls,
     );
 

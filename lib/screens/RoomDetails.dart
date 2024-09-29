@@ -1,5 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gharsathi/model/bookroom.dart';
+import 'package:gharsathi/services/BookRoomService.dart';
+import 'package:gharsathi/widgets/Esnackbar.dart';
 
 class Roomdetails extends StatefulWidget {
   const Roomdetails({super.key});
@@ -34,11 +39,48 @@ class _RoomdetailsState extends State<Roomdetails> {
     final String price = data['price'];
     final String description = data['description'];
     final List<String> images = List<String>.from(data['images']);
+    // Extract amenities
     final List<String> amenities =
         data['amenities'] != null ? List<String>.from(data['amenities']) : [];
     print("Room details data: $data");
 
-    // Extract amenities
+    void Book() async {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        Esnackbar.show(context, "User not logged in");
+        return;
+      }
+
+      String? bookedBy = currentUser.displayName;
+      DateTime bookDate = DateTime.now();
+      String bookedHouse = roomTitle;
+      String bookerUid = currentUser!.uid;
+
+      try {
+        QuerySnapshot existingBooking = await FirebaseFirestore.instance
+            .collection("bookingList")
+            .where("bookerUid", isEqualTo: bookerUid)
+            .where("bookedHouse", isEqualTo: bookedHouse)
+            .get();
+
+        if (existingBooking.docs.isNotEmpty) {
+          Esnackbar.show(context, "You have already booked this room");
+          return;
+        }
+
+        final booking = Bookroom(
+            bookedBy: bookedBy,
+            bookDate: bookDate,
+            bookedHouse: bookedHouse,
+            bookerUid: bookerUid);
+
+        await Bookroomservice().Booking(booking);
+        Esnackbar.show(context, "Room Booked Successfully");
+      } catch (e) {
+        Esnackbar.show(
+            context, "Failed to book room. ERROR CODE: ${e.toString()}");
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -114,7 +156,7 @@ class _RoomdetailsState extends State<Roomdetails> {
                         );
                       }),
                     )
-                  : Padding(
+                  : const Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'No amenities to show.',
@@ -131,7 +173,7 @@ class _RoomdetailsState extends State<Roomdetails> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: Book,
                       style: const ButtonStyle(
                           textStyle:
                               WidgetStatePropertyAll(TextStyle(fontSize: 20))),

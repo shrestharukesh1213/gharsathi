@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gharsathi/screens/LandlordChatScreen.dart';
 import 'package:gharsathi/screens/LandlordHomeScreen.dart';
+import 'package:gharsathi/screens/LandlordPostsScreen.dart';
 import 'package:gharsathi/screens/LandlordProfileScreen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -15,6 +16,7 @@ class _LandlordnavbarState extends State<Landlordnavbar> {
   int _selectedIndex = 0;
   final _screen = [
     Landlordhomescreen(),
+    Landlordpostsscreen(),
     Landlordchatscreen(),
     Landlordprofilescreen(),
   ];
@@ -33,6 +35,12 @@ class _LandlordnavbarState extends State<Landlordnavbar> {
             icon: const Icon(Icons.home),
             title: const Text("Home"),
             selectedColor: Colors.purple,
+          ),
+
+          SalomonBottomBarItem(
+            icon: const Icon(Icons.post_add_sharp),
+            title: const Text("Posts"),
+            selectedColor: Colors.pink,
           ),
 
           /// Profile

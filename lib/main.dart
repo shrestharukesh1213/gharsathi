@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gharsathi/firebase_options.dart';
 import 'package:gharsathi/screens/LandlordChatScreen.dart';
 import 'package:gharsathi/screens/LandlordHomeScreen.dart';
+import 'package:gharsathi/screens/LandlordPostsScreen.dart';
 import 'package:gharsathi/screens/LandlordProfileScreen.dart';
+import 'package:gharsathi/screens/LandlordRoomDetails.dart';
 import 'package:gharsathi/screens/LoginScreen.dart';
 // import 'package:gharsathi/screens/OtpVerificationScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
@@ -54,6 +56,8 @@ class MyApp extends StatelessWidget {
           '/tenantprofile': (context) => Tenantprofilescreen(),
           '/tenantpreference': (context) => Tenantpreferencescreen(),
           '/details': (context) => Roomdetails(),
+          '/landlordposts': (context) => Landlordpostsscreen(),
+          '/landlordroomdetails': (context) => Landlordroomdetails(),
           // '/otp': (context) => Otpverificationscreen(),
         },
       ),
