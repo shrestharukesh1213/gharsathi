@@ -4,6 +4,8 @@ class Rooms {
   String? location;
   String? price;
   String? description;
+  final List<String> amenities;
+
   List<String?>? images;
 
   Rooms({
@@ -12,6 +14,7 @@ class Rooms {
     this.location,
     this.price,
     this.description,
+    required this.amenities,
     this.images,
   });
 
@@ -23,6 +26,7 @@ class Rooms {
       'location': location,
       'price': price,
       'description': description,
+      'amenities': amenities,
       'images': images,
     };
   }

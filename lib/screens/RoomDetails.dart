@@ -21,6 +21,11 @@ class _RoomdetailsState extends State<Roomdetails> {
     final String price = data['price'];
     final String description = data['description'];
     final List<String> images = List<String>.from(data['images']);
+    final List<String> amenities =
+        data['amenities'] != null ? List<String>.from(data['amenities']) : [];
+    print("Room details data: $data");
+
+    // Extract amenities
 
     return Scaffold(
       appBar: AppBar(
@@ -80,6 +85,27 @@ class _RoomdetailsState extends State<Roomdetails> {
                   style: const TextStyle(fontSize: 20),
                 ),
               ),
+              amenities.isNotEmpty
+                  ? Wrap(
+                      spacing: 8.0,
+                      runSpacing: 4.0,
+                      children:
+                          List<Widget>.generate(amenities.length, (int index) {
+                        return Chip(
+                          label: Text(amenities[index]),
+                        );
+                      }),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'No amenities to show.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+
+              // Buttons for "Book Room" and "Contact Owner"
+
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,

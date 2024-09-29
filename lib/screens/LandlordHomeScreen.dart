@@ -49,9 +49,43 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   double price = 0;
   String description = '';
 
+  final List<String> _amenitiesOptions = [
+    'Gym',
+    'School',
+    'Hospital',
+    'Swimming Pool',
+    'Supermarkets',
+    'Restaurants',
+    'Healthcare',
+    'Parks',
+    'Banks',
+    'Coffee Shops'
+  ];
+
+  final List<bool> _isSelected = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
+
   final _formKey = GlobalKey<FormState>();
   void addRooms() async {
     List<String?> uploadedUrls = [];
+    // Collect selected amenities
+    List<String> selectedAmenities = [];
+    for (int i = 0; i < _amenitiesOptions.length; i++) {
+      if (_isSelected[i]) {
+        selectedAmenities.add(_amenitiesOptions[i]);
+      }
+    }
+
     // for loop for uploading each images in array
     for (final eachImage in _selectedImages) {
       final url = await Roomservices().uploadImage(File(eachImage));
@@ -65,12 +99,16 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
       location: locationController.text,
       price: priceController.text,
       description: descriptionController.text,
+      amenities: selectedAmenities, // Add amenities to room object
+
       images: uploadedUrls,
     );
 
     await Roomservices()
         .createRoom(room)
-        .then((value) => {Esnackbar.show(context, "Room added successfully")})
+        .then((value) => {
+              Esnackbar.show(context, "Room added successfully"),
+            })
         .catchError((error) {
       Esnackbar.show(context, "Failed to add room");
     });
@@ -143,6 +181,25 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: 20),
+
+              // Nearby amenities
+              Text('Nearby Amenities', style: TextStyle(fontSize: 18)),
+              Wrap(
+                spacing: 8.0, // Spacing between chips
+                children: List<Widget>.generate(_amenitiesOptions.length,
+                    (int index) {
+                  return FilterChip(
+                    label: Text(_amenitiesOptions[index]),
+                    selected: _isSelected[index],
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _isSelected[index] = selected;
+                      });
+                    },
+                  );
+                }),
               ),
 
               // add image widget
