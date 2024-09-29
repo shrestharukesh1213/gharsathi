@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gharsathi/model/Preferences.dart';
+import 'package:gharsathi/services/PreferenceServices.dart';
 
 class Tenantpreferencescreen extends StatefulWidget {
   const Tenantpreferencescreen({super.key});
@@ -147,8 +150,50 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
             }),
           ),
           const SizedBox(height: 20),
+          ElevatedButton(onPressed: _savePreferencesToFirestore, child: const Text('Save Preferences')),
         ],
       ),
     );
   }
+ Future<void> _savePreferencesToFirestore() async {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+
+  if (currentUser != null) {
+    List<String> selectedAmenities = [];
+    for (int i = 0; i < _amenitiesOptions.length; i++) {
+      if (_isSelected[i]) {
+        selectedAmenities.add(_amenitiesOptions[i]);
+      }
+    }
+
+    // Create a Preferences object
+    Preferences preferences = Preferences(
+      location: dropdownLocationValue,
+      distance: _currentSliderValue,
+      priceRange: {
+        'min': _currentRangeValues.start.round(),
+        'max': _currentRangeValues.end.round(),
+      },
+      propertyType: dropdownPropertyValue,
+      amenities: selectedAmenities,
+    );
+
+    // Save the preferences using PreferenceServices
+    PreferenceServices preferenceServices = PreferenceServices();
+    try {
+      await preferenceServices.savePreferences(preferences);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Preferences saved successfully!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save preferences: $e')),
+      );
+    }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('User not logged in!')),
+    );
+  }
+}
 }
