@@ -25,14 +25,13 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-         
               Text(
                 "Name: $name",
                 style: TextStyle(fontSize: 20),
@@ -41,13 +40,13 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
                 "Email: $email",
                 style: TextStyle(fontSize: 20),
               ),
-               const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Authentication().signOut(context);
-            },
-            child: const Text('Logout'),
-          ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Authentication().signOut(context);
+                },
+                child: const Text('Logout'),
+              ),
             ],
           ),
         ),

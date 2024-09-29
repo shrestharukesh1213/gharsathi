@@ -80,7 +80,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Post a Room Rent'),
+        title: const Text('Post a Room Rent'),
         automaticallyImplyLeading: false,
       ),
       body: Padding(
@@ -91,7 +91,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
             children: <Widget>[
               TextFormField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: 'Room Title'),
+                decoration: const InputDecoration(labelText: 'Room Title'),
                 onChanged: (value) {
                   roomTitle = value;
                 },
@@ -104,7 +104,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
               ),
               TextFormField(
                 controller: locationController,
-                decoration: InputDecoration(labelText: 'Location'),
+                decoration: const InputDecoration(labelText: 'Location'),
                 onChanged: (value) {
                   location = value;
                 },
@@ -117,7 +117,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
               ),
               TextFormField(
                 controller: priceController,
-                decoration: InputDecoration(labelText: 'Price'),
+                decoration: const InputDecoration(labelText: 'Price'),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   price = double.parse(value);
@@ -132,7 +132,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
 
               TextFormField(
                 controller: descriptionController,
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 5,
                 onChanged: (value) {
                   description = value;
@@ -160,12 +160,12 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                           onPressed: () {
                             openMedia(ImageSource.camera);
                           },
-                          icon: Icon(Icons.camera_alt)),
+                          icon: const Icon(Icons.camera_alt)),
                       IconButton(
                           onPressed: () {
                             openMedia(ImageSource.gallery);
                           },
-                          icon: Icon(Icons.photo)),
+                          icon: const Icon(Icons.photo)),
                     ],
                   ),
                 ],
@@ -215,14 +215,14 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey),
                       ),
-                      child: Center(
+                      child: const Center(
                           child: Text(
                         "No image selected",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       )),
                     ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(50),
