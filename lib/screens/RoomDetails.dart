@@ -10,6 +10,19 @@ class Roomdetails extends StatefulWidget {
 
 class _RoomdetailsState extends State<Roomdetails> {
   final List<String> images = [];
+  // Define a map to associate each amenity with its icon
+  final Map<String, IconData> _amenityIcons = {
+    'Gym': Icons.fitness_center,
+    'School': Icons.school,
+    'Hospital': Icons.local_hospital,
+    'Swimming Pool': Icons.pool,
+    'Supermarkets': Icons.shopping_cart,
+    'Restaurants': Icons.restaurant,
+    'Healthcare': Icons.health_and_safety,
+    'Parks': Icons.park,
+    'Banks': Icons.account_balance,
+    'Coffee Shops': Icons.coffee,
+  };
   @override
   Widget build(BuildContext context) {
     final data =
@@ -92,6 +105,11 @@ class _RoomdetailsState extends State<Roomdetails> {
                       children:
                           List<Widget>.generate(amenities.length, (int index) {
                         return Chip(
+                          avatar: Icon(
+                            _amenityIcons[
+                                amenities[index]], // Get icon based on amenity
+                            size: 20,
+                          ),
                           label: Text(amenities[index]),
                         );
                       }),

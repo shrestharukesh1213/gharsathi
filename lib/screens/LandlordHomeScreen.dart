@@ -49,31 +49,21 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   double price = 0;
   String description = '';
 
-  final List<String> _amenitiesOptions = [
-    'Gym',
-    'School',
-    'Hospital',
-    'Swimming Pool',
-    'Supermarkets',
-    'Restaurants',
-    'Healthcare',
-    'Parks',
-    'Banks',
-    'Coffee Shops'
+  // List of amenities with their respective icons
+  final List<Map<String, dynamic>> _amenitiesOptions = [
+    {'label': 'Gym', 'icon': Icons.fitness_center},
+    {'label': 'School', 'icon': Icons.school},
+    {'label': 'Hospital', 'icon': Icons.local_hospital},
+    {'label': 'Swimming Pool', 'icon': Icons.pool},
+    {'label': 'Supermarkets', 'icon': Icons.shopping_cart},
+    {'label': 'Restaurants', 'icon': Icons.restaurant},
+    {'label': 'Healthcare', 'icon': Icons.health_and_safety},
+    {'label': 'Parks', 'icon': Icons.park},
+    {'label': 'Banks', 'icon': Icons.account_balance},
+    {'label': 'Coffee Shops', 'icon': Icons.coffee},
   ];
 
-  final List<bool> _isSelected = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ];
+  final List<bool> _isSelected = List.generate(10, (_) => false);
 
   final _formKey = GlobalKey<FormState>();
   void addRooms() async {
@@ -82,7 +72,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
     List<String> selectedAmenities = [];
     for (int i = 0; i < _amenitiesOptions.length; i++) {
       if (_isSelected[i]) {
-        selectedAmenities.add(_amenitiesOptions[i]);
+        selectedAmenities.add(_amenitiesOptions[i]['label']);
       }
     }
 
@@ -191,7 +181,8 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                 children: List<Widget>.generate(_amenitiesOptions.length,
                     (int index) {
                   return FilterChip(
-                    label: Text(_amenitiesOptions[index]),
+                    avatar: Icon(_amenitiesOptions[index]['icon'], size: 20),
+                    label: Text(_amenitiesOptions[index]['label']),
                     selected: _isSelected[index],
                     onSelected: (bool selected) {
                       setState(() {
@@ -201,7 +192,6 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                   );
                 }),
               ),
-
               // add image widget
               const SizedBox(height: 20),
               Row(
