@@ -5,7 +5,6 @@ import 'package:gharsathi/model/Preferences.dart';
 class PreferenceServices {
   Future<void> savePreferences(Preferences preferences) async {
     try {
-      // Assuming you store preferences in a separate 'userPreference' collection
       await FirebaseFirestore.instance
           .collection('userPreference')
           .doc(FirebaseAuth.instance.currentUser!.uid) // Use current user's ID as document ID
