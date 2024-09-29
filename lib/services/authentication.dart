@@ -93,4 +93,14 @@ class Authentication {
           .showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {}
   }
+  Future<void> signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Optionally navigate to the splash screen or login screen after logging out
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error signing out: $e')));
+    }
+  }
 }

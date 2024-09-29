@@ -39,9 +39,9 @@ class _SplashscreenState extends State<Splashscreen> {
           // Navigate to the appropriate screen based on user role
           Future.delayed(Duration.zero, () {
             if (userType == 'Tenant') {
-              Navigator.pushReplacementNamed(context, '/tenanthome');
+              Navigator.pushReplacementNamed(context, '/tenantnavbar');
             } else if (userType == 'Landlord') {
-              Navigator.pushReplacementNamed(context, '/landlordhome');
+              Navigator.pushReplacementNamed(context, '/landlordnavbar');
             }
           });
         } else {

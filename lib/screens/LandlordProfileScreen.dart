@@ -16,7 +16,7 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
 
     final name = user!.displayName;
     final email = user.email;
-    final phoneNumber = user.phoneNumber;
+    // final phoneNumber = user.phoneNumber;
     // final uid = user.uid;
 
     return Scaffold(
