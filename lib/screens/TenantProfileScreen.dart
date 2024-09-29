@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gharsathi/services/authentication.dart';
 
 class Tenantprofilescreen extends StatefulWidget {
   const Tenantprofilescreen({super.key});
@@ -11,6 +12,9 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Tenant Profile'),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -25,31 +29,22 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
               ),
             ],
           ),
-
-          // ListView(
-          //   children: [
-          //     ListTile(
-          //       onTap: () {
-          //         Navigator.pushNamed(context, '/tenantpreference');
-          //       },
-          //       leading: Icon(Icons.person),
-          //       title: Text("User Preference"),
-          //       subtitle: Text("Change your profile details"),
-          //       trailing: Icon(Icons.arrow_forward_ios),
-          //     ),
-          //   ],
-          // ),
+          const SizedBox(height: 20),
           ListTile(
-            leading: Icon(
-                Icons.person), // An optional widget to display before the title
-            title: Text('User Preference'), // The main text
-            subtitle: Text(
-                'Change your preferences'), // Additional text displayed below the title
-            trailing: Icon(Icons
-                .arrow_forward), // An optional widget to display after the title
+            leading: const Icon(Icons.person),
+            title: const Text('User Preference'),
+            subtitle: const Text('Change your preferences'),
+            trailing: const Icon(Icons.arrow_forward),
             onTap: () {
               Navigator.pushNamed(context, '/tenantpreference');
             },
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Authentication().signOut(context);
+            },
+            child: const Text('Logout'),
           ),
         ],
       ),
