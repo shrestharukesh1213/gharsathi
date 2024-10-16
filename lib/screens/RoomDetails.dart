@@ -42,7 +42,7 @@ class _RoomdetailsState extends State<Roomdetails> {
     // Extract amenities
     final List<String> amenities =
         data['amenities'] != null ? List<String>.from(data['amenities']) : [];
-    print("Room details data: $data");
+    final String roomUid = data['roomId'];
 
     void Book() async {
       User? currentUser = FirebaseAuth.instance.currentUser;
@@ -54,7 +54,8 @@ class _RoomdetailsState extends State<Roomdetails> {
       String? bookedBy = currentUser.displayName;
       DateTime bookDate = DateTime.now();
       String bookedHouse = roomTitle;
-      String bookerUid = currentUser!.uid;
+      String bookerUid = currentUser.uid;
+      String roomId = roomUid;
 
       try {
         QuerySnapshot existingBooking = await FirebaseFirestore.instance
@@ -72,9 +73,11 @@ class _RoomdetailsState extends State<Roomdetails> {
             bookedBy: bookedBy,
             bookDate: bookDate,
             bookedHouse: bookedHouse,
-            bookerUid: bookerUid);
+            bookerUid: bookerUid,
+            roomId: roomId);
 
         await Bookroomservice().Booking(booking);
+
         Esnackbar.show(context, "Room Booked Successfully");
       } catch (e) {
         Esnackbar.show(
@@ -189,8 +192,14 @@ class _RoomdetailsState extends State<Roomdetails> {
                               WidgetStatePropertyAll(TextStyle(fontSize: 20))),
                       child: const Text("Contact Owner"),
                     ),
-                  )
+                  ),
                 ],
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('$roomUid'),
+                ),
               )
             ],
           )

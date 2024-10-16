@@ -34,6 +34,16 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
     }
   }
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    locationController.dispose();
+    priceController.dispose();
+    descriptionController.dispose();
+    imageController.dispose();
+    super.dispose();
+  }
+
   //controller
   final titleController = TextEditingController();
   final locationController = TextEditingController();
@@ -93,6 +103,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
       description: descriptionController.text,
       amenities: selectedAmenities, // Add amenities to room object
       images: uploadedUrls,
+      isBooked: 0,
     );
 
     await Roomservices()
@@ -101,7 +112,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
               Esnackbar.show(context, "Room added successfully"),
             })
         .catchError((error) {
-      Esnackbar.show(context, "Failed to add room");
+      return Esnackbar.show(context, "Failed to add room");
     });
   }
 
