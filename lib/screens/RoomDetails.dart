@@ -198,7 +198,7 @@ class _RoomdetailsState extends State<Roomdetails> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('$roomUid'),
+                  child: Text(roomUid),
                 ),
               )
             ],
