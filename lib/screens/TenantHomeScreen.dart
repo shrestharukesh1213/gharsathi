@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gharsathi/services/RoomRecommendation.dart';
 import 'package:gharsathi/widgets/RoomCard.dart';
+import 'package:gharsathi/widgets/RoomsCard.dart';
 
 class Tenanthomescreen extends StatefulWidget {
   const Tenanthomescreen({super.key});
@@ -11,7 +14,34 @@ class Tenanthomescreen extends StatefulWidget {
 
 class _TenanthomescreenState extends State<Tenanthomescreen> {
   String filterCategory = 'all';
+  List<Map<String, dynamic>> recommendedRooms = [];
+  bool isLoadingRecommendations = true;
+
   @override
+  void initState() {
+    super.initState();
+    fetchRecommendedRooms();
+  }
+
+  Future<void> fetchRecommendedRooms() async {
+    try {
+      // Get the current user's UID
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final uid = user.uid;
+        // Fetch recommended rooms based on the UID
+        recommendedRooms = await RoomRecommendation().getRecommendedRooms(uid);
+      } else {
+        print("User is not logged in");
+      }
+    } catch (e) {
+      print("Error fetching recommended rooms: $e");
+    }
+    setState(() {
+      isLoadingRecommendations = false;
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -21,6 +51,57 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            if (isLoadingRecommendations)
+              Center(child: CircularProgressIndicator())
+            else if (recommendedRooms.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      "Recommended for You",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: recommendedRooms.map((room) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, "/details",
+                                arguments: {
+                                  "roomTitle": room['name'],
+                                  "postedBy": room['postedBy'],
+                                  "location": room['location'],
+                                  "price": room['price'],
+                                  "description": room['description'],
+                                  "images": room['images'],
+                                  "amenities": room['amenities']
+                                });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Roomscard(
+                              roomTitle: room['name'],
+                              postedBy: room['postedBy'],
+                              location: room['location'],
+                              price: room['price'],
+                              description: room['description'],
+                              image: room['images'][0],
+                              amenities: room['amenities'],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+
+            // Fetch and display posted rooms
             FutureBuilder<QuerySnapshot?>(
                 future: filterCategory == "all"
                     ? FirebaseFirestore.instance.collection('rooms').get()

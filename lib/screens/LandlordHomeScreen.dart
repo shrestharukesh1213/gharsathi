@@ -45,7 +45,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
 
   String roomTitle = '';
   String? postedBy = '';
-  String location = '';
+  String? location;
   double price = 0;
   String description = '';
 
@@ -88,7 +88,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
       roomTitle: titleController.text,
       postedBy: user!.displayName,
       posterUid: currentUser!.uid,
-      location: locationController.text,
+      location: location,
       price: priceController.text,
       description: descriptionController.text,
       amenities: selectedAmenities, // Add amenities to room object
@@ -131,19 +131,33 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: locationController,
-                decoration: const InputDecoration(labelText: 'Location'),
+
+              DropdownButtonFormField<String>(
+                value:
+                    location, // Initial value can be set to null or a default value.
+                decoration: const InputDecoration(
+                  labelText: 'Location',
+                  border:
+                      OutlineInputBorder(), // Optional: Add a border to match the style.
+                ),
+                items: ['Bhaktapur', 'Kathmandu', 'Lalitpur']
+                    .map((String location) {
+                  return DropdownMenuItem<String>(
+                    value: location,
+                    child: Text(location),
+                  );
+                }).toList(),
                 onChanged: (value) {
-                  location = value;
+                  location = value; // Update the selected location
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the location';
+                    return 'Please select a location';
                   }
                   return null;
                 },
               ),
+
               TextFormField(
                 controller: priceController,
                 decoration: const InputDecoration(labelText: 'Price'),
