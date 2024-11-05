@@ -7,16 +7,18 @@ class Rooms {
   String? description;
   List<dynamic> amenities;
   List<String?>? images;
+  int isBooked;
 
   Rooms({
-    this.roomTitle,
-    this.postedBy,
-    this.posterUid,
-    this.location,
-    this.price,
-    this.description,
+    required this.roomTitle,
+    required this.postedBy,
+    required this.posterUid,
+    required this.location,
+    required this.price,
+    required this.description,
     required this.amenities,
-    this.images,
+    required this.images,
+    required this.isBooked,
   });
 
   // map to json
@@ -30,6 +32,7 @@ class Rooms {
       'description': description,
       'amenities': amenities,
       'images': images,
+      'isBooked': 0,
     };
   }
 }

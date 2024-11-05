@@ -1,10 +1,7 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gharsathi/model/bookroom.dart';
-import 'package:gharsathi/services/BookRoomService.dart';
-import 'package:gharsathi/widgets/Esnackbar.dart';
 
 class Landlordroomdetails extends StatefulWidget {
   const Landlordroomdetails({super.key});
@@ -42,6 +39,7 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
     // Extract amenities
     final List<String> amenities =
         data['amenities'] != null ? List<String>.from(data['amenities']) : [];
+    final roomUid = data['roomId'];
 
     return Scaffold(
       appBar: AppBar(
@@ -110,7 +108,7 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
                       }),
                     )
                   : const Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
                         'No amenities to show.',
                         style: TextStyle(fontSize: 16, color: Colors.grey),
@@ -120,6 +118,64 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
               //   padding: EdgeInsets.all(8.0),
               //   child: Text("Room booked"),
               // )
+            ],
+          ),
+          SizedBox.fromSize(
+            size: const Size(100, 100),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              FutureBuilder<QuerySnapshot?>(
+                  future: FirebaseFirestore.instance
+                      .collection("bookingList")
+                      .where('roomId', isEqualTo: roomUid)
+                      .limit(1)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Error: ${snapshot.error}"),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Text("Booked by:"),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                              width: 15,
+                              height: 15,
+                              child: CircularProgressIndicator(),
+                            )
+                          ],
+                        ),
+                      );
+                    } else if (!snapshot.hasData ||
+                        snapshot.data!.docs.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("No Booking Data"),
+                      );
+                    } else {
+                      final data = snapshot.data!.docs.first.data()
+                          as Map<String, dynamic>;
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Booked By: ${data['bookedBy'] ?? "Not Booked"}\nBooker Id: ${data['bookerUid'] ?? "Not Booked"}",
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.black),
+                        ),
+                      );
+                    }
+                  })
             ],
           )
         ],
