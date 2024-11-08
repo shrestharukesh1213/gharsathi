@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gharsathi/model/Preferences.dart';
+import 'package:gharsathi/services/recommendation_sys.dart';
 import 'package:gharsathi/utils/utils.dart';
-import 'package:gharsathi/widgets/Esnackbar.dart';
+import 'package:gharsathi/widgets/RecommendationCard.dart';
 import 'package:gharsathi/widgets/RoomCard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Tenanthomescreen extends StatefulWidget {
   const Tenanthomescreen({super.key});
@@ -14,6 +17,13 @@ class Tenanthomescreen extends StatefulWidget {
 class _TenanthomescreenState extends State<Tenanthomescreen> {
   final SearchController searchController = SearchController();
   bool _isLoading = false;
+
+  final Preferences userPreferences = Preferences();
+  final RecommendationSys recommender = RecommendationSys();
+  String? getCurrentUserUid() {
+    final user = FirebaseAuth.instance.currentUser;
+    return user?.uid; // Returns null if no user is signed in
+  }
 
   Future<List<DocumentSnapshot>> _searchItems(String query) async {
     if (query.isEmpty) return [];
@@ -87,12 +97,12 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                   onTap: () {
                     searchController.closeView("");
                     Navigator.pushNamed(context, '/details', arguments: {
-                      "roomTitle": data['name']?.toString() ?? "No name",
-                      "location": data['location']?.toString() ?? "No location",
-                      "postedBy": data['postedBy']?.toString() ?? "No poster",
-                      "price": data['price']?.toString() ?? "No price",
-                      "description":
-                          data['description']?.toString() ?? "No description",
+                      "roomTitle": data['name'] ?? "No name",
+                      "location": data['location'] ?? "No location",
+                      "postedBy": data['postedBy'] ?? "No poster",
+                      "propertyType": data['propertyType'],
+                      "price": data['price'] ?? "No price",
+                      "description": data['description'] ?? "No description",
                       "images": data['images'] is List
                           ? List<String>.from(data['images'])
                           : <String>[],
@@ -105,6 +115,85 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                 );
               }).toList();
             }),
+          ),
+          const Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: SizedBox(
+                  height: 20,
+                  width: double.infinity,
+                  child: Text(
+                    "Recommended for you",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 220,
+            child: FutureBuilder<List<DocumentSnapshot>>(
+                future: recommender.getRecommendations(getCurrentUserUid()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    print(snapshot);
+                    return const Center(
+                      child: Text('Error loading recommendations'),
+                    );
+                  }
+
+                  final recommendations = snapshot.data ?? [];
+
+                  if (recommendations.isEmpty) {
+                    return const Center(
+                      child: Text('No recommendations available'),
+                    );
+                  }
+
+                  return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      itemCount: recommendations.length,
+                      itemBuilder: (context, index) {
+                        final data = recommendations[index].data()
+                            as Map<String, dynamic>;
+                        return RecommendationCard(
+                          roomTitle: data['name'] ?? 'Unnamed Property',
+                          postedBy: data['postedBy'] ?? 'Unknown',
+                          propertyType: data['propertyType'] ?? "Unknown",
+                          description: data['description'] ?? 'No description',
+                          location: data['location'] ?? 'No location',
+                          price: data['price']?.toString() ??
+                              'Price not available',
+                          image: data['images']?[0] ?? '',
+                          amenities: data['amenities'] ?? [],
+                        );
+                      });
+                }),
+          ),
+          const Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: SizedBox(
+                  height: 20,
+                  width: double.infinity,
+                  child: Text(
+                    "All Posted Rooms",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -153,6 +242,8 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                                         "images": data[index]['images'],
                                         "amenities": data[index]['amenities'],
                                         "roomId": data[index].id,
+                                        "propertyType": data[index]
+                                            ['propertyType']
                                       },
                                     );
                                   },
@@ -163,7 +254,9 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                                       price: data[index]['price'],
                                       description: data[index]['description'],
                                       image: data[index]['images'][0],
-                                      amenities: data[index]['amenities']),
+                                      amenities: data[index]['amenities'],
+                                      propertyType: data[index]
+                                          ['propertyType']),
                                 );
                               });
                         }

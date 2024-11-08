@@ -58,6 +58,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   String location = '';
   double price = 0;
   String description = '';
+  String propertyType = 'Apartment';
 
   // List of amenities with their respective icons
   final List<Map<String, dynamic>> _amenitiesOptions = [
@@ -95,16 +96,16 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
       }
     }
     final room = Rooms(
-      roomTitle: titleController.text,
-      postedBy: user!.displayName,
-      posterUid: currentUser!.uid,
-      location: locationController.text,
-      price: priceController.text,
-      description: descriptionController.text,
-      amenities: selectedAmenities, // Add amenities to room object
-      images: uploadedUrls,
-      isBooked: 0,
-    );
+        roomTitle: titleController.text,
+        postedBy: user!.displayName,
+        posterUid: currentUser!.uid,
+        location: locationController.text,
+        price: priceController.text,
+        description: descriptionController.text,
+        amenities: selectedAmenities, // Add amenities to room object
+        images: uploadedUrls,
+        isBooked: 0,
+        propertyType: propertyType);
 
     await Roomservices()
         .createRoom(room)
@@ -186,8 +187,29 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
               ),
               const SizedBox(height: 20),
 
+              const Text('Select Property Type',
+                  style: TextStyle(fontSize: 18)),
+
+              DropdownButton(
+                hint: const Text('Select an option'),
+                items: const [
+                  DropdownMenuItem(
+                      value: "Apartment", child: Text("Apartment")),
+                  DropdownMenuItem(value: "House", child: Text("House")),
+                  DropdownMenuItem(value: "Room", child: Text("Room")),
+                ],
+                onChanged: (String? newValue) {
+                  setState(() {
+                    propertyType = newValue!;
+                  });
+                },
+                value: propertyType,
+              ),
+
+              const SizedBox(height: 20),
+
               // Nearby amenities
-              Text('Nearby Amenities', style: TextStyle(fontSize: 18)),
+              const Text('Nearby Amenities', style: TextStyle(fontSize: 18)),
               Wrap(
                 spacing: 8.0, // Spacing between chips
                 children: List<Widget>.generate(_amenitiesOptions.length,

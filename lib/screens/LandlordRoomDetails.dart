@@ -34,6 +34,8 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
     final String roomTitle = data['roomTitle'];
     final String location = data['location'];
     final String price = data['price'];
+    final String propertyType = data['propertyType'] ?? "Not found";
+    print(propertyType);
     final String description = data['description'];
     final List<String> images = List<String>.from(data['images']);
     // Extract amenities
@@ -80,6 +82,13 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Price: Rs.$price',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Property Type: $propertyType',
                   style: const TextStyle(fontSize: 20),
                 ),
               ),

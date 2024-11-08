@@ -43,6 +43,7 @@ class _RoomdetailsState extends State<Roomdetails> {
     final List<String> amenities =
         data['amenities'] != null ? List<String>.from(data['amenities']) : [];
     final String roomUid = data['roomId'];
+    final String propertyType = data['propertyType'];
 
     void Book() async {
       User? currentUser = FirebaseAuth.instance.currentUser;
@@ -132,6 +133,13 @@ class _RoomdetailsState extends State<Roomdetails> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Price: Rs.$price',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Property Type: $propertyType',
                   style: const TextStyle(fontSize: 20),
                 ),
               ),
