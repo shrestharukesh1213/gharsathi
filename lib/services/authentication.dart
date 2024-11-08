@@ -4,6 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
 
 class Authentication {
+  //instance of auth and firestore
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
+
   final Stream<QuerySnapshot> users =
       FirebaseFirestore.instance.collection("users").snapshots();
 
@@ -36,6 +43,7 @@ class Authentication {
         'email': email,
         'usertype': userType,
         'phoneNumber': phoneNumber,
+        'uid': userId,
       });
 
       //Sends to Tenant or Landlord screen depending on user type
@@ -93,6 +101,7 @@ class Authentication {
           .showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {}
   }
+
   Future<void> signOut(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
