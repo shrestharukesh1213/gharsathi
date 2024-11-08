@@ -123,7 +123,7 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
             items: const [
               DropdownMenuItem(child: Text('Apartment'), value: 'Apartment'),
               DropdownMenuItem(child: Text('House'), value: 'House'),
-              DropdownMenuItem(child: Text('Condo'), value: 'Condo'),
+              DropdownMenuItem(child: Text('Room'), value: 'Room'),
             ],
             onChanged: (String? newValue) {
               setState(() {
