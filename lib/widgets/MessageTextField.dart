@@ -22,12 +22,14 @@ class Messagetextfield extends StatelessWidget {
           enabledBorder: OutlineInputBorder(
             borderSide:
                 BorderSide(color: Theme.of(context).colorScheme.tertiary),
+            borderRadius: BorderRadius.circular(20),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide:
                 BorderSide(color: Theme.of(context).colorScheme.primary),
+            borderRadius: BorderRadius.circular(20),
           ),
-          fillColor: Theme.of(context).colorScheme.secondary,
+          fillColor: Color.fromARGB(255, 239, 239, 239),
           filled: true,
           hintText: hintText,
         ),

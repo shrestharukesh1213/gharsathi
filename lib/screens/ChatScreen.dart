@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/services/ChatService.dart';
 import 'package:gharsathi/services/authentication.dart';
+import 'package:gharsathi/widgets/ChatBubble.dart';
 import 'package:gharsathi/widgets/MessageTextField.dart';
 
 class Chatscreen extends StatelessWidget {
@@ -85,7 +86,15 @@ class Chatscreen extends StatelessWidget {
     var alignment =
         isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
-    return Text(data["message"]);
+    return Container(
+        alignment: alignment,
+        child: Column(
+          crossAxisAlignment:
+              isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            Chatbubble(message: data["message"], isCurrentUser: isCurrentUser)
+          ],
+        ));
   }
 
   //build message input
