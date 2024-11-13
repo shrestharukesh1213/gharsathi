@@ -42,11 +42,14 @@ class Landlordchatscreen extends StatelessWidget {
     );
   }
 
-  //build individual list tile for user
+  // Build individual list tile for user, only if they are landlords
   Widget _buildUserListItem(
       Map<String, dynamic> userData, BuildContext context) {
-    //display all user
-    if (userData["email"] != _authentication.getCurrentUser()!.email) {
+    final currentUserEmail = _authentication.getCurrentUser()?.email;
+
+    // Display only landlords, and exclude the current user
+    if (userData["usertype"] == "Tenant" &&
+        userData["email"] != currentUserEmail) {
       return Usertile(
         text: userData["email"],
         onTap: () {
