@@ -6,10 +6,10 @@ class RecommendationSys {
 
   // Weights for different features
   static const Map<String, double> featureWeights = {
-    'location': 0.3,
-    'price': 0.25,
-    'propertyType': 0.0,
-    'amenities': 0.25,
+    'location': 0.4,
+    'price': 0.3,
+    'propertyType': 0.15,
+    'amenities': 0.15,
   };
 
   Future<Preferences?> getUserPreferences(String? uid) async {
