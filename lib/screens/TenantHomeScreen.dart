@@ -57,85 +57,85 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
         automaticallyImplyLeading: false,
         title: const Text('Rent a room'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SearchAnchor(builder:
-                (BuildContext context, SearchController searchController) {
-              return SearchBar(
-                controller: searchController,
-                padding:
-                    const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.all(6)),
-                onTap: () {
-                  searchController.openView();
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SearchAnchor(
+                builder:
+                    (BuildContext context, SearchController searchController) {
+                  return SearchBar(
+                    controller: searchController,
+                    padding: const WidgetStatePropertyAll<EdgeInsets>(
+                      EdgeInsets.all(6),
+                    ),
+                    onTap: () {
+                      searchController.openView();
+                    },
+                    onChanged: (_) {
+                      searchController.openView();
+                    },
+                    leading: const Icon(Icons.search),
+                    hintText: "Search House/Room",
+                  );
                 },
-                onChanged: (_) {
-                  searchController.openView();
+                suggestionsBuilder: (BuildContext context,
+                    SearchController searchController) async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+
+                  final results = await _searchItems(searchController.text);
+
+                  setState(() {
+                    _isLoading = false;
+                  });
+
+                  return results.map((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+
+                    return ListTile(
+                      title: Text(data['name'] ?? "No name"),
+                      subtitle: Text(data['price'] ?? "No price"),
+                      onTap: () {
+                        searchController.closeView("");
+                        Navigator.pushNamed(context, '/details', arguments: {
+                          "roomTitle": data['name'] ?? "No name",
+                          "location": data['location'] ?? "No location",
+                          "postedBy": data['postedBy'] ?? "No poster",
+                          "propertyType": data['propertyType'],
+                          "price": data['price'] ?? "No price",
+                          "description":
+                              data['description'] ?? "No description",
+                          "images": data['images'] is List
+                              ? List<String>.from(data['images'])
+                              : <String>[],
+                          "amenities": data['amenities'] is List
+                              ? List<String>.from(data['amenities'])
+                              : <String>[],
+                          "roomId": doc.id,
+                        });
+                      },
+                    );
+                  }).toList();
                 },
-                leading: const Icon(Icons.search),
-                hintText: "Search House/Room",
-              );
-            }, suggestionsBuilder: (BuildContext context,
-                SearchController searchController) async {
-              setState(() {
-                _isLoading = true;
-              });
-
-              final results = await _searchItems(searchController.text);
-
-              setState(() {
-                _isLoading = false;
-              });
-
-              return results.map((doc) {
-                final data = doc.data() as Map<String, dynamic>;
-
-                return ListTile(
-                  title: Text(data['name'] ?? "No name"),
-                  subtitle: Text(data['price'] ?? "No price"),
-                  onTap: () {
-                    searchController.closeView("");
-                    Navigator.pushNamed(context, '/details', arguments: {
-                      "roomTitle": data['name'] ?? "No name",
-                      "location": data['location'] ?? "No location",
-                      "postedBy": data['postedBy'] ?? "No poster",
-                      "propertyType": data['propertyType'],
-                      "price": data['price'] ?? "No price",
-                      "description": data['description'] ?? "No description",
-                      "images": data['images'] is List
-                          ? List<String>.from(data['images'])
-                          : <String>[],
-                      "amenities": data['amenities'] is List
-                          ? List<String>.from(data['amenities'])
-                          : <String>[],
-                      "roomId": doc.id,
-                    });
-                  },
-                );
-              }).toList();
-            }),
-          ),
-          const Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: SizedBox(
-                  height: 20,
-                  width: double.infinity,
-                  child: Text(
-                    "Recommended for you",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
               ),
-            ],
+            ),
           ),
-          SizedBox(
-            height: 220,
-            child: FutureBuilder<List<DocumentSnapshot>>(
+          SliverToBoxAdapter(
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Text(
+                "Recommended for you",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 220,
+              child: FutureBuilder<List<DocumentSnapshot>>(
                 future: recommender.getRecommendations(getCurrentUserUid()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -158,111 +158,101 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                   }
 
                   return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      itemCount: recommendations.length,
-                      itemBuilder: (context, index) {
-                        final data = recommendations[index].data()
-                            as Map<String, dynamic>;
-                        return RecommendationCard(
-                          roomTitle: data['name'] ?? 'Unnamed Property',
-                          postedBy: data['postedBy'] ?? 'Unknown',
-                          propertyType: data['propertyType'] ?? "Unknown",
-                          description: data['description'] ?? 'No description',
-                          location: data['location'] ?? 'No location',
-                          price: data['price']?.toString() ??
-                              'Price not available',
-                          image: data['images']?[0] ?? '',
-                          amenities: data['amenities'] ?? [],
-                        );
-                      });
-                }),
-          ),
-          const Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: SizedBox(
-                  height: 20,
-                  width: double.infinity,
-                  child: Text(
-                    "All Posted Rooms",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    itemCount: recommendations.length,
+                    itemBuilder: (context, index) {
+                      final data =
+                          recommendations[index].data() as Map<String, dynamic>;
+                      return RecommendationCard(
+                        roomTitle: data['name'] ?? 'Unnamed Property',
+                        postedBy: data['postedBy'] ?? 'Unknown',
+                        propertyType: data['propertyType'] ?? "Unknown",
+                        description: data['description'] ?? 'No description',
+                        location: data['location'] ?? 'No location',
+                        price:
+                            data['price']?.toString() ?? 'Price not available',
+                        image: data['images']?[0] ?? '',
+                        amenities: data['amenities'] ?? [],
+                      );
+                    },
+                  );
+                },
               ),
-            ],
+            ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  FutureBuilder<QuerySnapshot?>(
-                      future: filterCategory == "all"
-                          ? FirebaseFirestore.instance.collection('rooms').get()
-                          : FirebaseFirestore.instance
-                              .collection('rooms')
-                              .where("category", isEqualTo: filterCategory)
-                              .get(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return const Center(
-                              child: Text('Failed to load data'));
-                        } else if (!snapshot.hasData) {
-                          return const Center(child: Text('No data found'));
-                        } else {
-                          final data = snapshot.data!.docs;
+          SliverToBoxAdapter(
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Text(
+                "All Posted Rooms",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                // Replace this with your FutureBuilder logic for posted rooms
+                return FutureBuilder<QuerySnapshot?>(
+                  future: filterCategory == "all"
+                      ? FirebaseFirestore.instance.collection('rooms').get()
+                      : FirebaseFirestore.instance
+                          .collection('rooms')
+                          .where("category", isEqualTo: filterCategory)
+                          .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                        child: Text('Failed to load data'),
+                      );
+                    } else if (!snapshot.hasData) {
+                      return const Center(child: Text('No data found'));
+                    } else {
+                      final data = snapshot.data!.docs;
 
-                          return ListView.builder(
-                              // crossAxisCount: 1,
-                              // childAspectRatio: 0.5,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: data.length,
-                              // children: List.generate(data.length, (index)
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      "/details",
-                                      arguments: {
-                                        "roomTitle": data[index]['name'],
-                                        "postedBy": data[index]['postedBy'],
-                                        "location": data[index]['location'],
-                                        "price": data[index]['price'],
-                                        "description": data[index]
-                                            ['description'],
-                                        "images": data[index]['images'],
-                                        "amenities": data[index]['amenities'],
-                                        "roomId": data[index].id,
-                                        "propertyType": data[index]
-                                            ['propertyType']
-                                      },
-                                    );
-                                  },
-                                  child: Roomcard(
-                                      roomTitle: data[index]['name'],
-                                      postedBy: data[index]['postedBy'],
-                                      location: data[index]['location'],
-                                      price: data[index]['price'],
-                                      description: data[index]['description'],
-                                      image: data[index]['images'][0],
-                                      amenities: data[index]['amenities'],
-                                      propertyType: data[index]
-                                          ['propertyType']),
-                                );
-                              });
-                        }
-                      })
-                ],
-              ),
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                "/details",
+                                arguments: {
+                                  "roomTitle": data[index]['name'],
+                                  "postedBy": data[index]['postedBy'],
+                                  "location": data[index]['location'],
+                                  "price": data[index]['price'],
+                                  "description": data[index]['description'],
+                                  "images": data[index]['images'],
+                                  "amenities": data[index]['amenities'],
+                                  "roomId": data[index].id,
+                                  "propertyType": data[index]['propertyType']
+                                },
+                              );
+                            },
+                            child: Roomcard(
+                              roomTitle: data[index]['name'],
+                              postedBy: data[index]['postedBy'],
+                              location: data[index]['location'],
+                              price: data[index]['price'],
+                              description: data[index]['description'],
+                              image: data[index]['images'][0],
+                              amenities: data[index]['amenities'],
+                              propertyType: data[index]['propertyType'],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                );
+              },
             ),
           ),
         ],
