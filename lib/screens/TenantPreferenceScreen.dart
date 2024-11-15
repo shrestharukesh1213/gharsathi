@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/model/Preferences.dart';
 import 'package:gharsathi/services/PreferenceServices.dart';
+import 'package:gharsathi/utils/utils.dart';
 
 class Tenantpreferencescreen extends StatefulWidget {
   const Tenantpreferencescreen({super.key});
@@ -11,6 +13,8 @@ class Tenantpreferencescreen extends StatefulWidget {
 }
 
 class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
+  User? user = FirebaseAuth.instance.currentUser;
+  bool _isLoading = true;
   //dropdownmenu for location
   String dropdownLocationValue = "Bhaktapur";
   // String? _location;
@@ -58,16 +62,65 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _initializeDefaultValues();
+    loadPreferences();
+  }
+
+  void _initializeDefaultValues() {
+    dropdownLocationValue = "Bhaktapur";
+    _currentRangeValues = const RangeValues(5000.0, 50000.0);
+    dropdownPropertyValue = "Apartment";
+  }
+
+  Future<void> loadPreferences() async {
+    setState(() {
+      _isLoading = false;
+    });
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      PreferenceServices preferenceServices = PreferenceServices();
+      if (currentUser != null) {
+        Preferences? preferences = await preferenceServices.getPreferences();
+        if (preferences != null) {
+          setState(() {
+            dropdownLocationValue = preferences.location ?? "Bhaktapur";
+
+            _currentRangeValues = RangeValues(
+                (preferences.priceRange!['min'] as num).toDouble(),
+                (preferences.priceRange!['max'] as num).toDouble());
+
+            dropdownPropertyValue = preferences.propertyType ?? "Apartment";
+
+            if (preferences.amenities != null) {
+              for (int i = 0; i <= _amenitiesOptions.length - 1; i++) {
+                _isSelected[i] =
+                    preferences.amenities!.contains(_amenitiesOptions[i]);
+              }
+            }
+          });
+        }
+      }
+    } catch (e) {
+      showSnackBar(context, "Error Loading Preferences: $e");
+      if (kDebugMode) {
+        debugPrint("Error Loading Preferences: $e");
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Preference Screen'),
+        title: const Text('Preference Screen'),
         centerTitle: true,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('Location Preference', style: TextStyle(fontSize: 18)),
+          const Text('Location Preference', style: TextStyle(fontSize: 18)),
           DropdownButton(
             hint: const Text('Select an option'),
             items: const [
@@ -96,7 +149,8 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
             },
           ),
           const SizedBox(height: 20),
-          Text('Price Range', style: TextStyle(fontSize: 18)),
+          const Center(
+              child: Text('Price Range', style: TextStyle(fontSize: 18))),
           RangeSlider(
             values: _currentRangeValues,
             min: 0,
@@ -114,16 +168,16 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
           ),
           Text(
             'Selected Range: ${_currentRangeValues.start.round()} - ${_currentRangeValues.end.round()}',
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 20),
-          Text('Property Type', style: TextStyle(fontSize: 18)),
+          const Text('Property Type', style: TextStyle(fontSize: 18)),
           DropdownButton(
             hint: const Text('Select an option'),
             items: const [
-              DropdownMenuItem(child: Text('Apartment'), value: 'Apartment'),
-              DropdownMenuItem(child: Text('House'), value: 'House'),
-              DropdownMenuItem(child: Text('Room'), value: 'Room'),
+              DropdownMenuItem(value: 'Apartment', child: Text('Apartment')),
+              DropdownMenuItem(value: 'House', child: Text('House')),
+              DropdownMenuItem(value: 'Room', child: Text('Room')),
             ],
             onChanged: (String? newValue) {
               setState(() {
@@ -133,7 +187,7 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
             value: dropdownPropertyValue,
           ),
           const SizedBox(height: 20),
-          Text('Nearby Amenities', style: TextStyle(fontSize: 18)),
+          const Text('Nearby Amenities', style: TextStyle(fontSize: 18)),
           Wrap(
             spacing: 8.0, // Spacing between chips
             children:

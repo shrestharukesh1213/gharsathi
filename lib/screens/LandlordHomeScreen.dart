@@ -111,6 +111,15 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
         .createRoom(room)
         .then((value) => {
               Esnackbar.show(context, "Room added successfully"),
+              setState(() {
+                titleController.clear();
+                locationController.clear();
+                priceController.text = '0.0';
+                descriptionController.clear();
+                _selectedImages.clear();
+                _isSelected.fillRange(0, _isSelected.length, false);
+                selectedAmenities.clear();
+              })
             })
         .catchError((error) {
       return Esnackbar.show(context, "Failed to add room");
@@ -215,6 +224,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                 children: List<Widget>.generate(_amenitiesOptions.length,
                     (int index) {
                   return FilterChip(
+                    showCheckmark: false,
                     avatar: Icon(_amenitiesOptions[index]['icon'], size: 20),
                     label: Text(_amenitiesOptions[index]['label']),
                     selected: _isSelected[index],
@@ -308,7 +318,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(50),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       addRooms();
                     }

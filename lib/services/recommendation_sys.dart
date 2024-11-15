@@ -146,7 +146,7 @@ class RecommendationSys {
       double score = await calculateSimilarityScore(userPreferences, property);
 
       //Only show rooms with Jaccard Similarity score greater than 0.5
-      if (score > 0.5) {
+      if (score > 0.6) {
         scoredProperties.add({
           'property': property,
           'score': score,
