@@ -11,7 +11,7 @@ class Splashscreen extends StatefulWidget {
 
 class _SplashscreenState extends State<Splashscreen> {
   bool _isCheckingSession = true; // Variable to track session checking status
-  bool _isLoggedIn = false;       // Variable to track login status
+  bool _isLoggedIn = false; // Variable to track login status
 
   @override
   void initState() {
@@ -27,10 +27,8 @@ class _SplashscreenState extends State<Splashscreen> {
       try {
         // User is logged in, fetch their role from Firestore
         String uid = currentUser.uid;
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection("users")
-            .doc(uid)
-            .get();
+        DocumentSnapshot userDoc =
+            await FirebaseFirestore.instance.collection("users").doc(uid).get();
 
         if (userDoc.exists) {
           // Get the user role
@@ -71,9 +69,10 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   Widget build(BuildContext context) {
     if (_isCheckingSession) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(), // Show loading while checking session
+          child:
+              CircularProgressIndicator(), // Show loading while checking session
         ),
       );
     }

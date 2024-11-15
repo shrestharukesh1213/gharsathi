@@ -130,7 +130,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post a Room Rent'),
+        title: const Text('Post a Property for Rent'),
         automaticallyImplyLeading: false,
       ),
       body: Padding(
@@ -141,13 +141,13 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
             children: <Widget>[
               TextFormField(
                 controller: titleController,
-                decoration: const InputDecoration(labelText: 'Room Title'),
+                decoration: const InputDecoration(labelText: 'Property Title'),
                 onChanged: (value) {
                   roomTitle = value;
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a room title';
+                    return 'Please enter a property title';
                   }
                   return null;
                 },

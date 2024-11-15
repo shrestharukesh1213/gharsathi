@@ -17,86 +17,109 @@ class _LoginscreenState extends State<Loginscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Login'),
         centerTitle: true,
+        // backgroundColor: Colors.purple[300],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailAndPhoneController,
-                validator: (value) {
-                  if (!EmailValidator.validate(value!)) {
-                    return "Invalid Email";
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Enter your email',
-                  border: OutlineInputBorder(),
-                ),
+      // backgroundColor: Colors.purple[300],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.asset(
+              'assets/icons/logo.png',
+              height: 200,
+              width: 200,
+            ),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: TextFormField(
+                      controller: _emailAndPhoneController,
+                      validator: (value) {
+                        if (!EmailValidator.validate(value!)) {
+                          return "Invalid Email";
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'Enter your email',
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 10)),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: TextFormField(
+                      obscureText: true,
+                      controller: _passwordController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password field should not be empty";
+                        } else if (value.length <= 6) {
+                          return "Password should be longer than 6 letters";
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Enter your password',
+                        hintText: 'Enter your password  ',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 50,
+                    width: 200,
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            Authentication().signIn(
+                                email: _emailAndPhoneController.text,
+                                password: _passwordController.text,
+                                context: context);
+                          }
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(fontSize: 18),
+                        )),
+                  ),
+                  const SizedBox(height: 40),
+                  const Text(
+                    "Dont have an account?",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(
+                    child: TextButton(
+                        style: ButtonStyle(
+                            fixedSize: WidgetStateProperty.all<Size>(
+                                const Size(double.infinity, double.infinity))),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/register');
+                        },
+                        child: const Text(
+                          "Register",
+                          style: TextStyle(fontSize: 16),
+                        )),
+                  )
+                ],
               ),
-              const SizedBox(height: 20),
-              TextFormField(
-                obscureText: true,
-                controller: _passwordController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Password field should not be empty";
-                  } else if (value.length <= 6) {
-                    return "Password should be longer than 6 letters";
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Enter your password',
-                  hintText: 'Enter your password  ',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        Authentication().signIn(
-                            email: _emailAndPhoneController.text,
-                            password: _passwordController.text,
-                            context: context);
-                      }
-                    },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 18),
-                    )),
-              ),
-              const SizedBox(height: 40),
-              const Text(
-                "Dont have an account?",
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(
-                child: TextButton(
-                    style: ButtonStyle(
-                        fixedSize: WidgetStateProperty.all<Size>(
-                            const Size(double.infinity, double.infinity))),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/register');
-                    },
-                    child: const Text(
-                      "Register",
-                      style: TextStyle(fontSize: 18),
-                    )),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

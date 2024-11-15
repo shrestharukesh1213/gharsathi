@@ -13,7 +13,6 @@ class Registerscreen extends StatefulWidget {
 }
 
 class _RegisterscreenState extends State<Registerscreen> {
-
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -21,16 +20,16 @@ class _RegisterscreenState extends State<Registerscreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Country selectedCountry = Country(
-    phoneCode: "977", 
-    countryCode: "NP", 
-    e164Sc: 0, 
-    geographic: true, 
-    level: 1, 
-    name: "Nepal", 
-    example: "Nepal", 
-    displayName: "Nepal", 
-    displayNameNoCountryCode: "NP", 
-    e164Key: "");
+      phoneCode: "977",
+      countryCode: "NP",
+      e164Sc: 0,
+      geographic: true,
+      level: 1,
+      name: "Nepal",
+      example: "Nepal",
+      displayName: "Nepal",
+      displayNameNoCountryCode: "NP",
+      e164Key: "");
 
   UserTypeEnum? _userTypeEnum; // To track selected user type
 
@@ -45,6 +44,11 @@ class _RegisterscreenState extends State<Registerscreen> {
             key: _formKey,
             child: Column(
               children: [
+                Image.asset(
+                  'assets/icons/logo.png',
+                  height: 200,
+                  width: 200,
+                ),
                 TextFormField(
                   controller: _firstnameController,
                   validator: (value) {
@@ -60,7 +64,10 @@ class _RegisterscreenState extends State<Registerscreen> {
                   decoration: const InputDecoration(
                     labelText: 'Enter your First Name',
                     hintText: 'Enter your First Name',
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -79,7 +86,10 @@ class _RegisterscreenState extends State<Registerscreen> {
                   decoration: const InputDecoration(
                     labelText: 'Enter your Last Name',
                     hintText: 'Enter your Last Name',
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   ),
                 ),
 
@@ -95,50 +105,58 @@ class _RegisterscreenState extends State<Registerscreen> {
                   decoration: const InputDecoration(
                     labelText: 'Enter your email',
                     hintText: 'Enter your email',
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _phoneController,
                   validator: (value) {
-                  if (value == null || value.isEmpty) {
-                   return "Enter phone number";
-                   } else if (value.contains(RegExp(r'[a-zA-Z]'))) {
-                    return "Should not contain alphabets";
-                   } else if (value.length != 10) {
-                    return "Phone number should be 10 digits";
-                   }
-                  return null;
-                   },
-                   decoration: InputDecoration(
-                     labelText: 'Enter Phone Number',
-                     hintText: 'Enter Phone Number',
-                     border: const OutlineInputBorder(),
-                     prefixIcon: Container(
-                     padding: const EdgeInsets.all(8.0),
-                     child: InkWell(
-                      onTap: () {
-                        showCountryPicker(
-                          context: context,
-                          countryListTheme: const CountryListThemeData(bottomSheetHeight:550),
-                          onSelect: (value){
-                          setState((){
-                            selectedCountry =value;
-                          });
-                        });
-                        
-                      },
-                        child: Text("${selectedCountry.flagEmoji} + ${selectedCountry.phoneCode}",
-                        style: const TextStyle(fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,)), 
-                        ),
-                        ),
-                        ),
-      
-                        keyboardType: TextInputType.number,
+                    if (value == null || value.isEmpty) {
+                      return "Enter phone number";
+                    } else if (value.contains(RegExp(r'[a-zA-Z]'))) {
+                      return "Should not contain alphabets";
+                    } else if (value.length != 10) {
+                      return "Phone number should be 10 digits";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Enter Phone Number',
+                    hintText: 'Enter Phone Number',
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                    prefixIcon: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          showCountryPicker(
+                              context: context,
+                              countryListTheme: const CountryListThemeData(
+                                  bottomSheetHeight: 550),
+                              onSelect: (value) {
+                                setState(() {
+                                  selectedCountry = value;
+                                });
+                              });
+                        },
+                        child: Text(
+                            "${selectedCountry.flagEmoji} + ${selectedCountry.phoneCode}",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
                     ),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
 
                 const SizedBox(height: 20),
                 TextFormField(
@@ -159,7 +177,10 @@ class _RegisterscreenState extends State<Registerscreen> {
                   decoration: const InputDecoration(
                     labelText: 'Enter your password',
                     hintText: 'Enter your password',
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -172,10 +193,9 @@ class _RegisterscreenState extends State<Registerscreen> {
                   children: [
                     Expanded(
                       child: RadioListTile<UserTypeEnum>(
-                        contentPadding: EdgeInsets.all(0.0),
+                        contentPadding: const EdgeInsets.all(1.0),
                         value: UserTypeEnum.Tenant,
                         groupValue: _userTypeEnum,
-                        tileColor: Colors.deepPurple.shade50 ,
                         title: Text(UserTypeEnum.Tenant.name),
                         onChanged: (UserTypeEnum? value) {
                           setState(() {
@@ -184,13 +204,11 @@ class _RegisterscreenState extends State<Registerscreen> {
                         },
                       ),
                     ),
-                    SizedBox(width:5.0,),
                     Expanded(
                       child: RadioListTile<UserTypeEnum>(
-                        contentPadding: EdgeInsets.all(0.0),
+                        contentPadding: const EdgeInsets.all(1.0),
                         value: UserTypeEnum.Landlord,
                         groupValue: _userTypeEnum,
-                         tileColor: Colors.deepPurple.shade50 ,
                         title: Text(UserTypeEnum.Landlord.name),
                         onChanged: (UserTypeEnum? value) {
                           setState(() {
@@ -199,35 +217,37 @@ class _RegisterscreenState extends State<Registerscreen> {
                         },
                       ),
                     ),
-                    
                   ],
                 ),
                 const SizedBox(height: 20),
-                 ElevatedButton(  onPressed: () async {
-      if (_userTypeEnum == null) {
-      // Show a SnackBar when user type is not selected
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select account type'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } else if (_formKey.currentState!.validate()) {
-      // Proceed with the signup if all fields and user type are valid
-      Authentication().signUp(
-        firstName: _firstnameController.text,
-        lastName: _lastnameController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-        phoneNumber: _phoneController.text,
-        userType: _userTypeEnum.toString().split('.').last, // Passing user type
-        context: context,
-      );
-    }
-  },
-  child: const Text('Register'),
-)
-
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_userTypeEnum == null) {
+                      // Show a SnackBar when user type is not selected
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please select account type'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    } else if (_formKey.currentState!.validate()) {
+                      // Proceed with the signup if all fields and user type are valid
+                      Authentication().signUp(
+                        firstName: _firstnameController.text,
+                        lastName: _lastnameController.text,
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        phoneNumber: _phoneController.text,
+                        userType: _userTypeEnum
+                            .toString()
+                            .split('.')
+                            .last, // Passing user type
+                        context: context,
+                      );
+                    }
+                  },
+                  child: const Text('Register'),
+                )
               ],
             ),
           ),
