@@ -30,6 +30,7 @@ class Roomcard extends StatefulWidget {
 class _RoomcardState extends State<Roomcard> {
   final SavedRoomService _savedRoomService = SavedRoomService();
   bool isSaved = false;
+  bool _disposed = false;
 
   @override
   void initState() {
@@ -37,29 +38,40 @@ class _RoomcardState extends State<Roomcard> {
     _checkIfSaved();
   }
 
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
   void _checkIfSaved() async {
     final saved = await _savedRoomService.isRoomSaved(widget.roomTitle);
-    setState(() {
-      isSaved = saved;
-    });
+    if (!_disposed && mounted) {
+      setState(() {
+        isSaved = saved;
+      });
+    }
   }
 
   void _toggleSave() async {
     final roomData = {
       'roomTitle': widget.roomTitle,
       'postedBy': widget.postedBy,
+      'amenities': widget.amenities,
       'description': widget.description,
       'location': widget.location,
       'price': widget.price,
-      'image': widget.image,
+      'images': widget.image,
       'propertyType': widget.propertyType,
     };
 
     await _savedRoomService.toggleSaveRoom(widget.roomTitle, roomData, isSaved);
 
-    setState(() {
-      isSaved = !isSaved;
-    });
+    if (!_disposed && mounted) {
+      setState(() {
+        isSaved = !isSaved;
+      });
+    }
   }
 
   @override
@@ -69,7 +81,8 @@ class _RoomcardState extends State<Roomcard> {
       child: SizedBox(
         width: 300,
         child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -85,13 +98,15 @@ class _RoomcardState extends State<Roomcard> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0, bottom: 4.0),
+                  padding: const EdgeInsets.only(
+                      left: 8.0, right: 8.0, top: 8.0, bottom: 4.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         widget.roomTitle,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Row(
                         children: [
@@ -128,7 +143,8 @@ class _RoomcardState extends State<Roomcard> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                  padding:
+                      const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     'NPR.${widget.price}',
                     style: const TextStyle(fontWeight: FontWeight.bold),

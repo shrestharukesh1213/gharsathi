@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/model/Preferences.dart';
 import 'package:gharsathi/services/recommendation_sys.dart';
@@ -27,6 +28,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
 
   Future<List<DocumentSnapshot>> _searchItems(String query) async {
     if (query.isEmpty) return [];
+    query = query.toLowerCase();
 
     try {
       final QuerySnapshot result = await FirebaseFirestore.instance
@@ -94,6 +96,9 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
 
                   return results.map((doc) {
                     final data = doc.data() as Map<String, dynamic>;
+                    if (kDebugMode) {
+                      print(data);
+                    }
 
                     return ListTile(
                       title: Text(data['name'] ?? "No name"),
@@ -123,8 +128,8 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: const Padding(
+          const SliverToBoxAdapter(
+            child: Padding(
               padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: Text(
                 "Recommended for you",
@@ -181,8 +186,8 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: const Padding(
+          const SliverToBoxAdapter(
+            child: Padding(
               padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: Text(
                 "All Posted Rooms",

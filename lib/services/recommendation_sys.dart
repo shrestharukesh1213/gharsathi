@@ -158,7 +158,6 @@ class RecommendationSys {
     scoredProperties.sort((a, b) => b['score'].compareTo(a['score']));
 
     // Return top N recommendations
-    print(scoredProperties);
     return scoredProperties
         .take(limit)
         .map((item) => item['property'] as DocumentSnapshot)

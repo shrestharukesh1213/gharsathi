@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,13 +24,13 @@ class _TenantSavedScreenState extends State<TenantSavedScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           final savedRooms = snapshot.data!.docs;
 
           if (savedRooms.isEmpty) {
-            return Center(
+            return const Center(
               child: Text("No saved rooms yet"),
             );
           }
@@ -38,19 +39,23 @@ class _TenantSavedScreenState extends State<TenantSavedScreen> {
             itemCount: savedRooms.length,
             itemBuilder: (context, index) {
               final room = savedRooms[index].data() as Map<String, dynamic>;
+              if (kDebugMode) {
+                print(room['images'].runtimeType);
+                print(room['images']);
+              }
 
               return ListTile(
                 title: Text(room['roomTitle'] ?? 'No Title'),
                 subtitle: Text(room['location'] ?? 'No Location'),
                 trailing: Text('NPR. ${room['price'] ?? 'N/A'}'),
-                leading: room['image'] != null
+                leading: room['images'] != null
                     ? Image.network(
-                        room['image'],
+                        room['images'],
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,
                       )
-                    : Icon(Icons.image, size: 50),
+                    : const Icon(Icons.image, size: 50),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -62,9 +67,14 @@ class _TenantSavedScreenState extends State<TenantSavedScreen> {
                           'postedBy': room['postedBy'] ?? 'Unknown',
                           'location': room['location'] ?? 'Unknown Location',
                           'price': room['price'] ?? 'N/A',
-                          'description': room['description'] ?? 'No Description',
-                          'images': List<String>.from(room['images'] ?? []),
-                          'amenities': List<String>.from(room['amenities'] ?? []),
+                          'description':
+                              room['description'] ?? 'No Description',
+                          'images': room['images'] is String
+                              ? [room['images']]
+                              : <String>[],
+                          'amenities': room['amenities'] is List
+                              ? List<String>.from(room['amenities'])
+                              : <String>[],
                           'roomId': room['roomId'] ?? '',
                           'propertyType': room['propertyType'] ?? 'Unknown',
                         },

@@ -114,7 +114,7 @@ class _RoomdetailsState extends State<Roomdetails> {
                     );
                   },
                 )
-              : Center(
+              : const Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
@@ -151,7 +151,7 @@ class _RoomdetailsState extends State<Roomdetails> {
                             );
                           }),
                         )
-                      : Padding(
+                      : const Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             'No amenities to show.',
@@ -205,7 +205,8 @@ class _RoomdetailsState extends State<Roomdetails> {
     );
   }
 
-  Widget _buildDetailText(String text, {TextAlign textAlign = TextAlign.start}) {
+  Widget _buildDetailText(String text,
+      {TextAlign textAlign = TextAlign.start}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(

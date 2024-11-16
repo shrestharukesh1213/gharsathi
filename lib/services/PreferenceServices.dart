@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:gharsathi/model/Preferences.dart';
-import 'package:gharsathi/utils/utils.dart';
-import 'package:gharsathi/widgets/Esnackbar.dart';
 
 class PreferenceServices {
   Future<void> savePreferences(Preferences preferences) async {
