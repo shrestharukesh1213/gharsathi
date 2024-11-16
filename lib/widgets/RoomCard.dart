@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gharsathi/services/SavedRoomService.dart';
 
 class Roomcard extends StatefulWidget {
   final String roomTitle;
@@ -10,7 +11,6 @@ class Roomcard extends StatefulWidget {
   final List<dynamic> amenities;
   final String propertyType;
 
-  //Roomcard structure
   const Roomcard({
     required this.roomTitle,
     required this.amenities,
@@ -28,6 +28,40 @@ class Roomcard extends StatefulWidget {
 }
 
 class _RoomcardState extends State<Roomcard> {
+  final SavedRoomService _savedRoomService = SavedRoomService();
+  bool isSaved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfSaved();
+  }
+
+  void _checkIfSaved() async {
+    final saved = await _savedRoomService.isRoomSaved(widget.roomTitle);
+    setState(() {
+      isSaved = saved;
+    });
+  }
+
+  void _toggleSave() async {
+    final roomData = {
+      'roomTitle': widget.roomTitle,
+      'postedBy': widget.postedBy,
+      'description': widget.description,
+      'location': widget.location,
+      'price': widget.price,
+      'image': widget.image,
+      'propertyType': widget.propertyType,
+    };
+
+    await _savedRoomService.toggleSaveRoom(widget.roomTitle, roomData, isSaved);
+
+    setState(() {
+      isSaved = !isSaved;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -35,33 +69,29 @@ class _RoomcardState extends State<Roomcard> {
       child: SizedBox(
         width: 300,
         child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
                     widget.image,
-                    width: 400, // Set width of the image
-                    height: 200, // Set height of the image
+                    width: 400,
+                    height: 200,
                     fit: BoxFit.cover,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, top: 8.0, bottom: 4.0),
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0, bottom: 4.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         widget.roomTitle,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Row(
                         children: [
@@ -79,17 +109,31 @@ class _RoomcardState extends State<Roomcard> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, right: 8.0, top: 0.0, bottom: 0.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(widget.description),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          color: isSaved ? Colors.blue : Colors.black,
+                        ),
+                        onPressed: _toggleSave,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                   child: Text(
                     'NPR.${widget.price}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                )
+                ),
               ],
             ),
           ),

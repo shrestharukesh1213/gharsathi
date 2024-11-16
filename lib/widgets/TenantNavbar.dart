@@ -16,7 +16,7 @@ class _TenantnavbarState extends State<Tenantnavbar> {
   int _selectedIndex = 0;
   final _screen = [
     Tenanthomescreen(),
-    Tenantsavedscreen(),
+    TenantSavedScreen(),
     Tenantchatscreen(),
     Tenantprofilescreen(),
   ];

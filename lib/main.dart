@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
           '/landlordchat': (context) => Landlordchatscreen(),
           '/landlordprofile': (context) => Landlordprofilescreen(),
           '/tenanthome': (context) => Tenanthomescreen(),
-          '/tenantsaved': (context) => Tenantsavedscreen(),
+          '/tenantsaved': (context) => TenantSavedScreen(),
           '/tenantchat': (context) => Tenantchatscreen(),
           '/tenantprofile': (context) => Tenantprofilescreen(),
           '/tenantpreference': (context) => Tenantpreferencescreen(),

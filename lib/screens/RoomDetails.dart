@@ -14,7 +14,6 @@ class Roomdetails extends StatefulWidget {
 }
 
 class _RoomdetailsState extends State<Roomdetails> {
-  final List<String> images = [];
   // Define a map to associate each amenity with its icon
   final Map<String, IconData> _amenityIcons = {
     'Gym': Icons.fitness_center,
@@ -28,22 +27,23 @@ class _RoomdetailsState extends State<Roomdetails> {
     'Banks': Icons.account_balance,
     'Coffee Shops': Icons.coffee,
   };
+
   @override
   Widget build(BuildContext context) {
     final data =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
-    final String roomTitle = data['roomTitle'];
-    final String postedBy = data['postedBy'];
-    final String location = data['location'];
-    final String price = data['price'];
-    final String description = data['description'];
-    final List<String> images = List<String>.from(data['images']);
-    // Extract amenities
+    // Safely extract data with fallbacks for null values
+    final String roomTitle = data['roomTitle'] ?? 'Unknown Room';
+    final String postedBy = data['postedBy'] ?? 'Unknown';
+    final String location = data['location'] ?? 'Unknown Location';
+    final String price = data['price'] ?? 'N/A';
+    final String description = data['description'] ?? 'No Description';
+    final List<String> images = List<String>.from(data['images'] ?? []);
     final List<String> amenities =
         data['amenities'] != null ? List<String>.from(data['amenities']) : [];
-    final String roomUid = data['roomId'];
-    final String propertyType = data['propertyType'];
+    final String roomUid = data['roomId'] ?? '';
+    final String propertyType = data['propertyType'] ?? 'Unknown';
 
     void Book() async {
       User? currentUser = FirebaseAuth.instance.currentUser;
@@ -71,11 +71,12 @@ class _RoomdetailsState extends State<Roomdetails> {
         }
 
         final booking = Bookroom(
-            bookedBy: bookedBy,
-            bookDate: bookDate,
-            bookedHouse: bookedHouse,
-            bookerUid: bookerUid,
-            roomId: roomId);
+          bookedBy: bookedBy,
+          bookDate: bookDate,
+          bookedHouse: bookedHouse,
+          bookerUid: bookerUid,
+          roomId: roomId,
+        );
 
         await Bookroomservice().Booking(booking);
 
@@ -93,125 +94,124 @@ class _RoomdetailsState extends State<Roomdetails> {
       ),
       body: Column(
         children: [
-          Container(
-              child: CarouselSlider.builder(
-            itemCount: images.length,
-            options: CarouselOptions(
-              autoPlay: false,
-              aspectRatio: 2.0,
-              enlargeCenterPage: true,
-            ),
-            itemBuilder: (context, index, realIdx) {
-              return Container(
-                child: Center(
-                    child: Image.network(images[index],
-                        fit: BoxFit.cover, width: 1000)),
-              );
-            },
-          )),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Location: $location',
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Posted By: $postedBy',
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Price: Rs.$price',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Property Type: $propertyType',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Description:\n $description',
-                  textAlign: TextAlign.justify,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              amenities.isNotEmpty
-                  ? Wrap(
-                      spacing: 8.0,
-                      runSpacing: 4.0,
-                      children:
-                          List<Widget>.generate(amenities.length, (int index) {
-                        return Chip(
-                          avatar: Icon(
-                            _amenityIcons[
-                                amenities[index]], // Get icon based on amenity
-                            size: 20,
-                          ),
-                          label: Text(amenities[index]),
-                        );
-                      }),
-                    )
-                  : const Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'No amenities to show.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    ),
-
-              // Buttons for "Book Room" and "Contact Owner"
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: Book,
-                      style: const ButtonStyle(
-                          textStyle:
-                              WidgetStatePropertyAll(TextStyle(fontSize: 20))),
-                      child: const Text("Book Room"),
+          // Image Carousel Section
+          images.isNotEmpty
+              ? CarouselSlider.builder(
+                  itemCount: images.length,
+                  options: CarouselOptions(
+                    autoPlay: false,
+                    aspectRatio: 2.0,
+                    enlargeCenterPage: true,
+                  ),
+                  itemBuilder: (context, index, realIdx) {
+                    return Container(
+                      child: Center(
+                          child: Image.network(
+                        images[index],
+                        fit: BoxFit.cover,
+                        width: 1000,
+                      )),
+                    );
+                  },
+                )
+              : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'No images available for this room.',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: const ButtonStyle(
-                          textStyle:
-                              WidgetStatePropertyAll(TextStyle(fontSize: 20))),
-                      child: const Text("Contact Owner"),
+                ),
+
+          // Room Details Section
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailText('Location: $location'),
+                  _buildDetailText('Posted By: $postedBy'),
+                  _buildDetailText('Price: Rs. $price'),
+                  _buildDetailText('Property Type: $propertyType'),
+                  _buildDetailText('Description:\n$description',
+                      textAlign: TextAlign.justify),
+                  amenities.isNotEmpty
+                      ? Wrap(
+                          spacing: 8.0,
+                          runSpacing: 4.0,
+                          children:
+                              List<Widget>.generate(amenities.length, (index) {
+                            return Chip(
+                              avatar: Icon(
+                                _amenityIcons[amenities[index]],
+                                size: 20,
+                              ),
+                              label: Text(amenities[index]),
+                            );
+                          }),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'No amenities to show.',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                        ),
+
+                  // Buttons for Booking and Contact
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: Book,
+                        style: ElevatedButton.styleFrom(
+                          textStyle: const TextStyle(fontSize: 20),
+                        ),
+                        child: const Text("Book Room"),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Implement contact owner functionality here
+                        },
+                        style: ElevatedButton.styleFrom(
+                          textStyle: const TextStyle(fontSize: 20),
+                        ),
+                        child: const Text("Contact Owner"),
+                      ),
+                    ],
+                  ),
+
+                  // Room UID (for debugging or info display)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Room ID: $roomUid',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(roomUid),
-                ),
-              )
-            ],
-          )
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDetailText(String text, {TextAlign textAlign = TextAlign.start}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        text,
+        textAlign: textAlign,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
       ),
     );
   }
