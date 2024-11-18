@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gharsathi/screens/RoomDetails.dart';
 import 'package:gharsathi/screens/TenantChatScreen.dart';
 import 'package:gharsathi/screens/TenantHomeScreen.dart';
 import 'package:gharsathi/screens/TenantProfileScreen.dart';
