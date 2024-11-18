@@ -145,8 +145,8 @@ class RecommendationSys {
     for (var property in propertiesSnapshot.docs) {
       double score = await calculateSimilarityScore(userPreferences, property);
 
-      //Only show rooms with Jaccard Similarity score greater than 0.5
-      if (score > 0.6) {
+      //Only show rooms with Weighted Similarity score greater than 0.7
+      if (score > 0.7) {
         scoredProperties.add({
           'property': property,
           'score': score,
@@ -158,6 +158,7 @@ class RecommendationSys {
     scoredProperties.sort((a, b) => b['score'].compareTo(a['score']));
 
     // Return top N recommendations
+    print(scoredProperties);
     return scoredProperties
         .take(limit)
         .map((item) => item['property'] as DocumentSnapshot)

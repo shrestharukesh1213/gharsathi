@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gharsathi/screens/RegisterScreen.dart';
 import 'package:gharsathi/services/SavedRoomService.dart';
 
 class Roomcard extends StatefulWidget {
@@ -31,17 +34,36 @@ class _RoomcardState extends State<Roomcard> {
   final SavedRoomService _savedRoomService = SavedRoomService();
   bool isSaved = false;
   bool _disposed = false;
+  String? userType;
 
   @override
   void initState() {
     super.initState();
     _checkIfSaved();
+    getUserType();
   }
 
   @override
   void dispose() {
     _disposed = true;
     super.dispose();
+  }
+
+  User? user = FirebaseAuth.instance.currentUser;
+
+  Future<void> getUserType() async {
+    late final String? userId;
+
+    if (user != null) {
+      userId = user!.uid;
+    }
+
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    setState(() {
+      userType = doc['usertype'];
+    });
   }
 
   void _checkIfSaved() async {
@@ -128,26 +150,24 @@ class _RoomcardState extends State<Roomcard> {
                   child: Text(widget.description),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          color: isSaved ? Colors.blue : Colors.black,
-                        ),
-                        onPressed: _toggleSave,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
                   padding:
                       const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                  child: Text(
-                    'NPR.${widget.price}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'NPR.${widget.price}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      if (userType == "Tenant")
+                        IconButton(
+                          icon: Icon(
+                            isSaved ? Icons.bookmark : Icons.bookmark_border,
+                            color: isSaved ? Colors.blue : Colors.black,
+                          ),
+                          onPressed: _toggleSave,
+                        ),
+                    ],
                   ),
                 ),
               ],
