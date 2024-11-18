@@ -20,7 +20,7 @@ class _LandlordpostsscreenState extends State<Landlordpostsscreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Posts'),
+        title: const Text('My Rooms'),automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Column(
