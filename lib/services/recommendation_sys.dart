@@ -6,10 +6,10 @@ class RecommendationSys {
 
   // Weights for different features
   static const Map<String, double> featureWeights = {
-    'location': 0.4,
+    'location': 0.3,
     'price': 0.3,
-    'propertyType': 0.15,
-    'amenities': 0.15,
+    'propertyType': 0.2,
+    'amenities': 0.2,
   };
 
   Future<Preferences?> getUserPreferences(String? uid) async {
@@ -45,15 +45,23 @@ class RecommendationSys {
     // Location similarity using distance calculation
     // Location choosing on the map is not implemented so default of 0.0 is set for now
     if (userPreferences.location != null && property['location'] != null) {
-      double distance = await calculateDistance(
-        userPreferences.location!,
-        property['location'],
-      );
+      // double distance = await calculateDistance(
+      //   userPreferences.location!,
+      //   property['location'],
+      // );
 
       // Normalize distance score (closer = higher score)
-      double maxDistance = userPreferences.distance ?? 50.0; // Default 50km
-      double locationScore = 1.0 - (distance / maxDistance).clamp(0.0, 1.0);
+      // double maxDistance = userPreferences.distance ?? 50.0;
+      // double locationScore = 1.0 - (distance / maxDistance).clamp(0.0, 1.0);
+      double locationScore;
+      if (userPreferences.location == property['location']) {
+        locationScore = 1.0;
+      } else {
+        locationScore = 0.0;
+      }
+
       similarityScore += locationScore * featureWeights['location']!;
+      //print("Location Score: $locationScore");
     }
 
     // Price range similarity
@@ -69,6 +77,7 @@ class RecommendationSys {
         userPreferences.priceRange!,
         propertyPrice,
       );
+      //print("Price Score: $priceScore");
       similarityScore += priceScore * featureWeights['price']!;
     }
 
@@ -78,6 +87,7 @@ class RecommendationSys {
       double typeScore =
           userPreferences.propertyType == property['propertyType'] ? 1.0 : 0.0;
       similarityScore += typeScore * featureWeights['propertyType']!;
+      //print("Type Score: $typeScore");
     }
 
     // Amenities similarity using Jaccard similarity
@@ -87,6 +97,7 @@ class RecommendationSys {
         userPreferences.amenities!,
         propertyAmenities,
       );
+      //print("Amenities Score: $amenitiesScore");
       similarityScore += amenitiesScore * featureWeights['amenities']!;
     }
 
@@ -100,7 +111,7 @@ class RecommendationSys {
 
     double intersection = set1.intersection(set2).length.toDouble();
     double union = set1.union(set2).length.toDouble();
-
+    //print("Jaccard Score:${intersection / union}");
     return intersection / union;
   }
 
@@ -144,9 +155,10 @@ class RecommendationSys {
     //Calculate Jaccard Similarity score for properties
     for (var property in propertiesSnapshot.docs) {
       double score = await calculateSimilarityScore(userPreferences, property);
+      print("Score: $score");
 
-      //Only show rooms with Weighted Similarity score greater than 0.7
-      if (score > 0.7) {
+      //Only show rooms with Weighted Similarity score greater than 0.3
+      if (score > 0.3) {
         scoredProperties.add({
           'property': property,
           'score': score,
@@ -158,7 +170,6 @@ class RecommendationSys {
     scoredProperties.sort((a, b) => b['score'].compareTo(a['score']));
 
     // Return top N recommendations
-    print(scoredProperties);
     return scoredProperties
         .take(limit)
         .map((item) => item['property'] as DocumentSnapshot)
