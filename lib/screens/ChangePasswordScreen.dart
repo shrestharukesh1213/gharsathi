@@ -93,11 +93,17 @@ class _ChangepasswordscreenState extends State<Changepasswordscreen> {
               TextFormField(
                 controller: _newPasswordController,
                 validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Enter your new password';
-                  }
-                  return null;
-                },
+                    if (value == null || value.isEmpty) {
+                      return "Password field should not be empty";
+                    } else if (value.length <= 6) {
+                      return "Password should be longer than 6 letters";
+                    } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                      return "Password must contain at least one uppercase letter";
+                    } else if (!RegExp(r'[0-9]').hasMatch(value)) {
+                      return "Password must contain at least one number";
+                    }
+                    return null;
+                  },
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'New Password',
