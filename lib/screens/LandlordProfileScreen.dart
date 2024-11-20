@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gharsathi/services/authentication.dart';
 
 class Landlordprofilescreen extends StatefulWidget {
@@ -10,48 +11,142 @@ class Landlordprofilescreen extends StatefulWidget {
 }
 
 class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
+  final Authentication _authService = Authentication();
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? profileImageUrl;
+
   @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      User? currentUser = _authService.getCurrentUser();
+      if (currentUser != null) {
+        // Fetch user details from Firestore
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection("users")
+            .doc(currentUser.uid)
+            .get();
+
+        if (userDoc.exists) {
+          setState(() {
+            firstName = userDoc['firstName'];
+            lastName = userDoc['lastName'];
+            email = userDoc['email'];
+            profileImageUrl = currentUser.photoURL ??
+                'https://via.placeholder.com/150'; // Default profile image
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading user data: $e')),
+      );
+    }
+  }
+
+  void _signOut() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Sign out"),
+          content: const Text("Are you sure you want to log out?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                _authService.signOut(context);
+              },
+              child: const Text("Confirm"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
-    final name = user!.displayName;
-    final email = user.email;
-    //final phoneNumber = user.phoneNumber;
-    // final uid = user.uid;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: const Text('Landlord Profile'),
         automaticallyImplyLeading: false,
-        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Name: $name",
-                style: TextStyle(fontSize: 20),
-              ),
-              Text(
-                "Email: $email",
-                style: TextStyle(fontSize: 20),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Authentication().signOut(context);
-                },
-                child: const Text('Logout'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: firstName == null || email == null
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 100,
+                  backgroundImage: NetworkImage(profileImageUrl!),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "$firstName $lastName",
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Text(email!),
+                const SizedBox(height: 10),
+                const Divider(height: 20),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/tenantpreference');
+                        },
+                        leading: const Icon(Icons.person),
+                        title: const Text("Edit Preferences"),
+                        subtitle: const Text("Change your preferences"),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/changepass');
+                        },
+                        leading: const Icon(Icons.safety_check),
+                        title: const Text("Change Password"),
+                        subtitle: const Text("Create a new password"),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/landlordposts');
+                        },
+                        leading: const Icon(Icons.shopping_bag),
+                        title: const Text("My Rooms"),
+                        subtitle: const Text("Show all your rooms"),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                      ),
+                      
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: _signOut,
+                  child: const Text("Logout"),
+                ),
+              ],
+            ),
     );
   }
 }
