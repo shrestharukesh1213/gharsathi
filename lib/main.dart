@@ -1,13 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/firebase_options.dart';
+import 'package:gharsathi/screens/ChangePasswordScreen.dart';
 import 'package:gharsathi/screens/LandlordChatScreen.dart';
 import 'package:gharsathi/screens/LandlordHomeScreen.dart';
 import 'package:gharsathi/screens/LandlordPostsScreen.dart';
 import 'package:gharsathi/screens/LandlordProfileScreen.dart';
 import 'package:gharsathi/screens/LandlordRoomDetails.dart';
 import 'package:gharsathi/screens/LoginScreen.dart';
-// import 'package:gharsathi/screens/OtpVerificationScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
 import 'package:gharsathi/screens/RoomDetails.dart';
 import 'package:gharsathi/screens/SplashScreen.dart';
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           '/details': (context) => Roomdetails(),
           '/landlordposts': (context) => Landlordpostsscreen(),
           '/landlordroomdetails': (context) => Landlordroomdetails(),
-          // '/otp': (context) => Otpverificationscreen(),
+          '/changepass': (context)=> Changepasswordscreen(),
         },
       ),
     );
