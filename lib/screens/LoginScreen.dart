@@ -21,9 +21,7 @@ class _LoginscreenState extends State<Loginscreen> {
       appBar: AppBar(
         title: const Text('Login'),
         centerTitle: true,
-        // backgroundColor: Colors.purple[300],
       ),
-      // backgroundColor: Colors.purple[300],
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -98,24 +96,25 @@ class _LoginscreenState extends State<Loginscreen> {
                           style: TextStyle(fontSize: 18),
                         )),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 250),
                   const Text(
-                    "Dont have an account?",
-                    style: TextStyle(fontSize: 16),
+                    "Don't have an account?",
+                    style: TextStyle(fontSize: 20),
                   ),
+                  const SizedBox(height: 10),
                   SizedBox(
-                    child: TextButton(
-                        style: ButtonStyle(
-                            fixedSize: WidgetStateProperty.all<Size>(
-                                const Size(double.infinity, double.infinity))),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/register');
-                        },
-                        child: const Text(
-                          "Register",
-                          style: TextStyle(fontSize: 16),
-                        )),
-                  )
+                    height: 50,
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/register');
+                      },
+                      child: const Text(
+                        "Register",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
