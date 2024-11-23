@@ -38,8 +38,7 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
             firstName = userDoc['firstName'];
             lastName = userDoc['lastName'];
             email = userDoc['email'];
-            profileImageUrl =
-                currentUser.photoURL ?? 'https://via.placeholder.com/150';
+            profileImageUrl = userDoc['profileImage'] ?? 'https://via.placeholder.com/150'; // Default image if not found
           });
         }
       }
@@ -95,7 +94,14 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
               children: [
                 CircleAvatar(
                   radius: 100,
-                  backgroundImage: NetworkImage(profileImageUrl!),
+                  backgroundImage: profileImageUrl != null
+                      ? NetworkImage(profileImageUrl!)
+                      : const NetworkImage('https://via.placeholder.com/150'),
+                  onBackgroundImageError: (exception, stackTrace) {
+                    setState(() {
+                      profileImageUrl = 'https://via.placeholder.com/150'; // Fallback image on error
+                    });
+                  },
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -112,7 +118,7 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
                     children: [
                       ListTile(
                         onTap: () {
-                          Navigator.pushNamed(context, '/e');
+                          Navigator.pushNamed(context, '/editprofile');
                         },
                         leading: const Icon(Icons.person),
                         title: const Text("My Profile"),

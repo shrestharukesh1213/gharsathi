@@ -38,8 +38,7 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
             firstName = userDoc['firstName'];
             lastName = userDoc['lastName'];
             email = userDoc['email'];
-            profileImageUrl = currentUser.photoURL ??
-                'https://via.placeholder.com/150'; // Default profile image
+            profileImageUrl = userDoc['profileImage'] ?? 'https://via.placeholder.com/150'; // Default profile image
           });
         }
       }
@@ -112,11 +111,11 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
                     children: [
                       ListTile(
                         onTap: () {
-                          Navigator.pushNamed(context, '/tenantpreference');
+                          Navigator.pushNamed(context, '/editprofile');
                         },
                         leading: const Icon(Icons.person),
-                        title: const Text("Edit Preferences"),
-                        subtitle: const Text("Change your preferences"),
+                        title: const Text("My Profile"),
+                        subtitle: const Text("Edit your profile"),
                         trailing: const Icon(Icons.arrow_forward_ios),
                       ),
                       ListTile(

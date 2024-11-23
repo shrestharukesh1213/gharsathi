@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/firebase_options.dart';
 import 'package:gharsathi/screens/ChangePasswordScreen.dart';
+import 'package:gharsathi/screens/EditProfileScreen.dart';
 import 'package:gharsathi/screens/LandlordChatScreen.dart';
 import 'package:gharsathi/screens/LandlordHomeScreen.dart';
 import 'package:gharsathi/screens/LandlordPostsScreen.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
           '/landlordroomdetails': (context) => Landlordroomdetails(),
           '/changepass': (context) => Changepasswordscreen(),
           '/locationSelect': (context) => LocationSelectScreen(),
+          '/editprofile':(context)=> EditProfileScreen(),
         },
       ),
     );

@@ -138,9 +138,9 @@ class _ChangepasswordscreenState extends State<Changepasswordscreen> {
                     _changePassword();
                   }
                 },
-                child: const Text('Change Password'),
+                child: const Text('Change Password', style: TextStyle(fontSize: 20,color:Color.fromARGB(255, 83, 8, 64)),),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: const Color.fromARGB(255, 248, 255, 254),
                   minimumSize: const Size(double.infinity, 50),
                 ),
               ),
