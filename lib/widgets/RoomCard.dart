@@ -13,6 +13,7 @@ class Roomcard extends StatefulWidget {
   final String image;
   final List<dynamic> amenities;
   final String propertyType;
+  final String postDate;
 
   const Roomcard({
     required this.roomTitle,
@@ -23,6 +24,7 @@ class Roomcard extends StatefulWidget {
     required this.price,
     required this.image,
     required this.propertyType,
+    required this.postDate,
     super.key,
   });
 
@@ -85,6 +87,7 @@ class _RoomcardState extends State<Roomcard> {
       'price': widget.price,
       'images': widget.image,
       'propertyType': widget.propertyType,
+      'postDate': widget.postDate
     };
 
     await _savedRoomService.toggleSaveRoom(widget.roomTitle, roomData, isSaved);

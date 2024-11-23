@@ -44,6 +44,7 @@ class _RoomdetailsState extends State<Roomdetails> {
         data['amenities'] != null ? List<String>.from(data['amenities']) : [];
     final String roomUid = data['roomId'] ?? '';
     final String propertyType = data['propertyType'] ?? 'Unknown';
+    final String postDate = data['postDate'] ?? 'No Date Found';
 
     void Book() async {
       User? currentUser = FirebaseAuth.instance.currentUser;
@@ -132,6 +133,7 @@ class _RoomdetailsState extends State<Roomdetails> {
                 children: [
                   _buildDetailText('Location: $location'),
                   _buildDetailText('Posted By: $postedBy'),
+                  _buildDetailText('Post Date: $postDate'),
                   _buildDetailText('Price: Rs. $price'),
                   _buildDetailText('Property Type: $propertyType'),
                   _buildDetailText('Description:\n$description',

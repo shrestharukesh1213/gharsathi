@@ -79,7 +79,7 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
     );
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -100,7 +100,8 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
                 const SizedBox(height: 10),
                 Text(
                   "$firstName $lastName",
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 Text(email!),
@@ -136,7 +137,6 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
                         subtitle: const Text("Show all your rooms"),
                         trailing: const Icon(Icons.arrow_forward_ios),
                       ),
-                      
                     ],
                   ),
                 ),

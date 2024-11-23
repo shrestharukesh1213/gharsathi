@@ -42,6 +42,7 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
     final List<String> amenities =
         data['amenities'] != null ? List<String>.from(data['amenities']) : [];
     final roomUid = data['roomId'];
+    final String postDate = data['postDate'];
 
     return Scaffold(
       appBar: AppBar(
@@ -76,6 +77,13 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
                   'Location: $location',
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Post Date: $postDate',
+                  style: const TextStyle(fontSize: 20),
                 ),
               ),
               Padding(

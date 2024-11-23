@@ -20,7 +20,8 @@ class _LandlordpostsscreenState extends State<Landlordpostsscreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Rooms'),automaticallyImplyLeading: false,
+        title: const Text('My Rooms'),
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -59,7 +60,8 @@ class _LandlordpostsscreenState extends State<Landlordpostsscreen> {
                                     "images": data[index]['images'],
                                     "amenities": data[index]['amenities'],
                                     "roomId": data[index].id,
-                                    "propertyType": data[index]['propertyType']
+                                    "propertyType": data[index]['propertyType'],
+                                    "postDate": data[index]['postDate']
                                   },
                                 );
                               },
@@ -71,7 +73,8 @@ class _LandlordpostsscreenState extends State<Landlordpostsscreen> {
                                   description: data[index]['description'],
                                   image: data[index]['images'][0],
                                   amenities: data[index]['amenities'],
-                                  propertyType: data[index]['propertyType']));
+                                  propertyType: data[index]['propertyType'],
+                                  postDate: data[index]['postDate']));
                         });
                   }
                 })

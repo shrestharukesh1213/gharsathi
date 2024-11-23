@@ -78,6 +78,7 @@ class _TenantSavedScreenState extends State<TenantSavedScreen> {
                               : <String>[],
                           'roomId': room['roomId'] ?? '',
                           'propertyType': room['propertyType'] ?? 'Unknown',
+                          'postDate': room['postDate']
                         },
                       ),
                     ),

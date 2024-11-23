@@ -197,6 +197,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                             data['price']?.toString() ?? 'Price not available',
                         image: data['images']?[0] ?? '',
                         amenities: data['amenities'] ?? [],
+                        postDate: data['postDate'] ?? '',
                       );
                     },
                   );
@@ -249,7 +250,8 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                                   "images": data[index]['images'],
                                   "amenities": data[index]['amenities'],
                                   "roomId": data[index].id,
-                                  "propertyType": data[index]['propertyType']
+                                  "propertyType": data[index]['propertyType'],
+                                  "postDate": data[index]['postDate']
                                 },
                               );
                             },
@@ -262,6 +264,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                               image: data[index]['images'][0],
                               amenities: data[index]['amenities'],
                               propertyType: data[index]['propertyType'],
+                              postDate: data[index]['postDate'],
                             ),
                           );
                         },

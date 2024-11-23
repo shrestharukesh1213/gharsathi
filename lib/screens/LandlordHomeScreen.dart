@@ -60,6 +60,13 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   String description = '';
   String propertyType = 'Apartment';
 
+  String currentDate() {
+    DateTime now = DateTime.now();
+    return "${now.year.toString().padLeft(4, '0')}-"
+        "${(now.month).toString().padLeft(2, '0')}-"
+        "${now.day.toString().padLeft(2, '0')}";
+  }
+
   // List of amenities with their respective icons
   final List<Map<String, dynamic>> _amenitiesOptions = [
     {'label': 'Gym', 'icon': Icons.fitness_center},
@@ -105,7 +112,8 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
         amenities: selectedAmenities, // Add amenities to room object
         images: uploadedUrls,
         isBooked: 0,
-        propertyType: propertyType);
+        propertyType: propertyType,
+        postDate: currentDate());
 
     await Roomservices()
         .createRoom(room)

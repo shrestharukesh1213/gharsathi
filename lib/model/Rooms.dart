@@ -9,6 +9,7 @@ class Rooms {
   List<String?>? images;
   int isBooked;
   String? propertyType;
+  String postDate;
 
   Rooms(
       {required this.roomTitle,
@@ -20,7 +21,8 @@ class Rooms {
       required this.amenities,
       required this.images,
       required this.isBooked,
-      required this.propertyType});
+      required this.propertyType,
+      required this.postDate});
 
   // map to json
   Map<String, dynamic> toJson() {
@@ -34,7 +36,8 @@ class Rooms {
       'amenities': amenities,
       'images': images,
       'isBooked': 0,
-      'propertyType': propertyType
+      'propertyType': propertyType,
+      'postDate': postDate
     };
   }
 }
