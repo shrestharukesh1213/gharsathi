@@ -38,8 +38,8 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
             firstName = userDoc['firstName'];
             lastName = userDoc['lastName'];
             email = userDoc['email'];
-            profileImageUrl = currentUser.photoURL ??
-                'https://via.placeholder.com/150';
+            profileImageUrl =
+                currentUser.photoURL ?? 'https://via.placeholder.com/150';
           });
         }
       }
@@ -100,7 +100,8 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
                 const SizedBox(height: 10),
                 Text(
                   "$firstName $lastName",
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 Text(email!),
@@ -136,7 +137,15 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
                         subtitle: const Text("Create a new password"),
                         trailing: const Icon(Icons.arrow_forward_ios),
                       ),
-                      
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/locationSelect');
+                        },
+                        leading: const Icon(Icons.location_on),
+                        title: const Text("My Location"),
+                        subtitle: const Text("Set your Location"),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                      ),
                       ListTile(
                         onTap: () {
                           Navigator.pushNamed(context, '/tenantsaved');
