@@ -2,7 +2,7 @@ class Rooms {
   String? roomTitle;
   String? posterUid;
   String? postedBy;
-  String? location;
+  Map<String, dynamic>? location;
   String? price;
   String? description;
   List<dynamic> amenities;

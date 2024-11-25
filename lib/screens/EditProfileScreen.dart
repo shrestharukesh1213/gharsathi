@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:gharsathi/global_variables.dart';
 import 'package:gharsathi/services/SharedPref.dart';
 import 'package:gharsathi/model/Users.dart';
@@ -74,10 +75,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // update profile function
   Future<void> _updateFunction() async {
-    print("First Name: ${_firstNameController.text}");
-    print(lastName);
-    print(profileImage);
-    print(phoneNumber);
+    if (kDebugMode) {
+      print("First Name: ${_firstNameController.text}");
+      print(lastName);
+      print(profileImage);
+      print(phoneNumber);
+    }
 
     String? uploadedImage;
 
@@ -91,7 +94,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
       phoneNumber: _phoneNumberController.text,
-      profileImage: uploadedImage ?? profileImage ?? "https://via.placeholder.com/150",
+      profileImage:
+          uploadedImage ?? profileImage ?? "https://via.placeholder.com/150",
     );
 
     try {
@@ -99,28 +103,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await Authentication()
           .updateUser(userID, updatedUserData)
           .then((value) async {
-            // Fetch the user's usertype (role) from Firestore
-            DocumentSnapshot userDoc = await FirebaseFirestore.instance
-                .collection('users')
-                .doc(userID)
-                .get();
+        // Fetch the user's usertype (role) from Firestore
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .get();
 
-            String userType = userDoc['usertype'];
+        String userType = userDoc['usertype'];
 
-            // Navigate based on usertype
-            if (userType == 'tenant') {
-              Navigator.pushReplacementNamed(context, '/tenantnavbar');
-            } else if (userType == 'Landlord') {
-              Navigator.pushReplacementNamed(context, '/landlordnavbar');
-            }
+        // Navigate based on usertype
+        if (userType == 'tenant') {
+          Navigator.pushReplacementNamed(context, '/tenantnavbar');
+        } else if (userType == 'Landlord') {
+          Navigator.pushReplacementNamed(context, '/landlordnavbar');
+        }
 
-            SharedPref().updateUserData(updatedUserData);
-            SharedPref().getUserData();
-            Esnackbar.show(context, "Profile updated");
-          })
-          .catchError((error) => {
-                Esnackbar.show(context, "Firebase profile update error"),
-              });
+        SharedPref().updateUserData(updatedUserData);
+        SharedPref().getUserData();
+        Esnackbar.show(context, "Profile updated");
+      }).catchError((error) {
+        Esnackbar.show(context, "Firebase profile update error");
+        return null;
+      });
     } catch (e) {
       Esnackbar.show(context, "Something went wrong");
     }
@@ -149,19 +153,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             : profileImage!))
                     : CircleAvatar(
                         radius: 50,
-                        backgroundImage: _image != null ? FileImage(_image!) : null,
+                        backgroundImage:
+                            _image != null ? FileImage(_image!) : null,
                       ),
                 Positioned(
                   right: 0,
                   bottom: 0,
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      onPressed: openMedia,  // Open media picker (camera/gallery)
-                      icon: Icon(
+                      onPressed:
+                          openMedia, // Open media picker (camera/gallery)
+                      icon: const Icon(
                         Icons.camera_alt,
                         color: Colors.black,
                         size: 30,

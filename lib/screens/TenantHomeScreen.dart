@@ -125,7 +125,8 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                         searchController.closeView("");
                         Navigator.pushNamed(context, '/details', arguments: {
                           "roomTitle": data['name'] ?? "No name",
-                          "location": data['location'] ?? "No location",
+                          "location":
+                              data['location']['address'] ?? "No location",
                           "postedBy": data['postedBy'] ?? "No poster",
                           "propertyType": data['propertyType'],
                           "price": data['price'] ?? "No price",
@@ -192,7 +193,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                         postedBy: data['postedBy'] ?? 'Unknown',
                         propertyType: data['propertyType'] ?? "Unknown",
                         description: data['description'] ?? 'No description',
-                        location: data['location'] ?? 'No location',
+                        location: data['location']['address'] ?? 'No location',
                         price:
                             data['price']?.toString() ?? 'Price not available',
                         image: data['images']?[0] ?? '',
@@ -244,7 +245,8 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                                 arguments: {
                                   "roomTitle": data[index]['name'],
                                   "postedBy": data[index]['postedBy'],
-                                  "location": data[index]['location'],
+                                  "location": data[index]['location']
+                                      ['address'],
                                   "price": data[index]['price'],
                                   "description": data[index]['description'],
                                   "images": data[index]['images'],
@@ -258,7 +260,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                             child: Roomcard(
                               roomTitle: data[index]['name'],
                               postedBy: data[index]['postedBy'],
-                              location: data[index]['location'],
+                              location: data[index]['location']['address'],
                               price: data[index]['price'],
                               description: data[index]['description'],
                               image: data[index]['images'][0],

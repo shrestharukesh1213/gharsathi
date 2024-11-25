@@ -38,7 +38,8 @@ class _LandlordprofilescreenState extends State<Landlordprofilescreen> {
             firstName = userDoc['firstName'];
             lastName = userDoc['lastName'];
             email = userDoc['email'];
-            profileImageUrl = userDoc['profileImage'] ?? 'https://via.placeholder.com/150'; // Default profile image
+            profileImageUrl = userDoc['profileImage'] ??
+                'https://via.placeholder.com/150'; // Default profile image
           });
         }
       }

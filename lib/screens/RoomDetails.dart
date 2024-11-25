@@ -128,77 +128,81 @@ class _RoomdetailsState extends State<Roomdetails> {
           // Room Details Section
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDetailText('Location: $location'),
-                  _buildDetailText('Posted By: $postedBy'),
-                  _buildDetailText('Post Date: $postDate'),
-                  _buildDetailText('Price: Rs. $price'),
-                  _buildDetailText('Property Type: $propertyType'),
-                  _buildDetailText('Description:\n$description',
-                      textAlign: TextAlign.justify),
-                  amenities.isNotEmpty
-                      ? Wrap(
-                          spacing: 8.0,
-                          runSpacing: 4.0,
-                          children:
-                              List<Widget>.generate(amenities.length, (index) {
-                            return Chip(
-                              avatar: Icon(
-                                _amenityIcons[amenities[index]],
-                                size: 20,
-                              ),
-                              label: Text(amenities[index]),
-                            );
-                          }),
-                        )
-                      : const Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'No amenities to show.',
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailText('Location: $location'),
+                    _buildDetailText('Posted By: $postedBy'),
+                    _buildDetailText('Post Date: $postDate'),
+                    _buildDetailText('Price: Rs. $price'),
+                    _buildDetailText('Property Type: $propertyType'),
+                    _buildDetailText('Description:\n$description',
+                        textAlign: TextAlign.justify),
+                    amenities.isNotEmpty
+                        ? Wrap(
+                            spacing: 8.0,
+                            runSpacing: 4.0,
+                            children: List<Widget>.generate(amenities.length,
+                                (index) {
+                              return Chip(
+                                avatar: Icon(
+                                  _amenityIcons[amenities[index]],
+                                  size: 20,
+                                ),
+                                label: Text(amenities[index]),
+                              );
+                            }),
+                          )
+                        : const Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'No amenities to show.',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.grey),
+                            ),
                           ),
-                        ),
 
-                  // Buttons for Booking and Contact
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: Book,
-                        style: ElevatedButton.styleFrom(
-                          textStyle: const TextStyle(fontSize: 20),
+                    // Buttons for Booking and Contact
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: Book,
+                          style: ElevatedButton.styleFrom(
+                            textStyle: const TextStyle(fontSize: 20),
+                          ),
+                          child: const Text("Book Room"),
                         ),
-                        child: const Text("Book Room"),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Implement contact owner functionality here
-                        },
-                        style: ElevatedButton.styleFrom(
-                          textStyle: const TextStyle(fontSize: 20),
+                        const SizedBox(width: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Implement contact owner functionality here
+                          },
+                          style: ElevatedButton.styleFrom(
+                            textStyle: const TextStyle(fontSize: 20),
+                          ),
+                          child: const Text("Contact Owner"),
                         ),
-                        child: const Text("Contact Owner"),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
 
-                  // Room UID (for debugging or info display)
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Room ID: $roomUid',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                    // Room UID (for debugging or info display)
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Room ID: $roomUid',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

@@ -38,7 +38,8 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
             firstName = userDoc['firstName'];
             lastName = userDoc['lastName'];
             email = userDoc['email'];
-            profileImageUrl = userDoc['profileImage'] ?? 'https://via.placeholder.com/150'; // Default image if not found
+            profileImageUrl = userDoc['profileImage'] ??
+                'https://via.placeholder.com/150'; // Default image if not found
           });
         }
       }
@@ -99,7 +100,8 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
                       : const NetworkImage('https://via.placeholder.com/150'),
                   onBackgroundImageError: (exception, stackTrace) {
                     setState(() {
-                      profileImageUrl = 'https://via.placeholder.com/150'; // Fallback image on error
+                      profileImageUrl =
+                          'https://via.placeholder.com/150'; // Fallback image on error
                     });
                   },
                 ),
@@ -145,7 +147,7 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
                       ),
                       ListTile(
                         onTap: () {
-                          Navigator.pushNamed(context, '/locationSelect');
+                          Navigator.pushNamed(context, '/tenantLocationSelect');
                         },
                         leading: const Icon(Icons.location_on),
                         title: const Text("My Location"),

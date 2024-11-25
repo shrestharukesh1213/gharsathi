@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gharsathi/screens/landlordLocationSelectScreen.dart';
 
 class Landlordroomdetails extends StatefulWidget {
   const Landlordroomdetails({super.key});
@@ -11,6 +12,9 @@ class Landlordroomdetails extends StatefulWidget {
 }
 
 class _LandlordroomdetailsState extends State<Landlordroomdetails> {
+  String address = 'Not Set';
+  late double latitude;
+  late double longitude;
   final List<String> images = [];
   // Define a map to associate each amenity with its icon
   final Map<String, IconData> _amenityIcons = {
@@ -49,153 +53,185 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
         title: Text(roomTitle),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Container(
-              child: CarouselSlider.builder(
-            itemCount: images.length,
-            options: CarouselOptions(
-              autoPlay: false,
-              aspectRatio: 2.0,
-              enlargeCenterPage: true,
-            ),
-            itemBuilder: (context, index, realIdx) {
-              return Container(
-                child: Center(
-                    child: Image.network(images[index],
-                        fit: BoxFit.cover, width: 1000)),
-              );
-            },
-          )),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Location: $location',
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+                child: CarouselSlider.builder(
+              itemCount: images.length,
+              options: CarouselOptions(
+                autoPlay: false,
+                aspectRatio: 2.0,
+                enlargeCenterPage: true,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Post Date: $postDate',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Price: Rs.$price',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Property Type: $propertyType',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Description:\n $description',
-                  textAlign: TextAlign.justify,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              amenities.isNotEmpty
-                  ? Wrap(
-                      spacing: 8.0,
-                      runSpacing: 4.0,
-                      children:
-                          List<Widget>.generate(amenities.length, (int index) {
-                        return Chip(
-                          avatar: Icon(
-                            _amenityIcons[
-                                amenities[index]], // Get icon based on amenity
-                            size: 20,
-                          ),
-                          label: Text(amenities[index]),
-                        );
-                      }),
-                    )
-                  : const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'No amenities to show.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
+              itemBuilder: (context, index, realIdx) {
+                return Container(
+                  child: Center(
+                      child: Image.network(images[index],
+                          fit: BoxFit.cover, width: 1000)),
+                );
+              },
+            )),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Location: $location',
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-              // Padding(
-              //   padding: EdgeInsets.all(8.0),
-              //   child: Text("Room booked"),
-              // )
-            ],
-          ),
-          SizedBox.fromSize(
-            size: const Size(100, 100),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FutureBuilder<QuerySnapshot?>(
-                  future: FirebaseFirestore.instance
-                      .collection("bookingList")
-                      .where('roomId', isEqualTo: roomUid)
-                      .limit(1)
-                      .get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Error: ${snapshot.error}"),
-                      );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Text("Booked by:"),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            SizedBox(
-                              width: 15,
-                              height: 15,
-                              child: CircularProgressIndicator(),
-                            )
-                          ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Post Date: $postDate',
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Price: Rs.$price',
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Property Type: $propertyType',
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Description:\n $description',
+                      textAlign: TextAlign.justify,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  amenities.isNotEmpty
+                      ? Wrap(
+                          spacing: 8.0,
+                          runSpacing: 4.0,
+                          children: List<Widget>.generate(amenities.length,
+                              (int index) {
+                            return Chip(
+                              avatar: Icon(
+                                _amenityIcons[amenities[
+                                    index]], // Get icon based on amenity
+                                size: 20,
+                              ),
+                              label: Text(amenities[index]),
+                            );
+                          }),
+                        )
+                      : const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'No amenities to show.',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
                         ),
-                      );
-                    } else if (!snapshot.hasData ||
-                        snapshot.data!.docs.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text("No Booking Data"),
-                      );
-                    } else {
-                      final data = snapshot.data!.docs.first.data()
-                          as Map<String, dynamic>;
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Booked By: ${data['bookedBy'] ?? "Not Booked"}\nBooker Id: ${data['bookerUid'] ?? "Not Booked"}",
-                          style: const TextStyle(
-                              fontSize: 15, color: Colors.black),
-                        ),
-                      );
-                    }
-                  })
-            ],
-          )
-        ],
+                  // Padding(
+                  //   padding: EdgeInsets.all(8.0),
+                  //   child: Text("Room booked"),
+                  // )
+                ],
+              ),
+            ),
+            // Row(
+            //   children: [
+            //     Text("Change Location"),
+            //     Padding(
+            //       padding: const EdgeInsets.only(left: 8.0),
+            //       child: OutlinedButton(
+            //         child: Icon(
+            //           Icons.add_location,
+            //         ),
+            //         onPressed: () async {
+            //           final Map<String, dynamic>? result = await Navigator.push(
+            //               context,
+            //               MaterialPageRoute(
+            //                   builder: (context) =>
+            //                       const LandlordLocationSelectScreen()));
+            //           if (result != null) {
+            //             setState(() {
+            //               address = result['address'];
+            //               latitude = result['latitude'];
+            //               longitude = result['longitude'];
+            //             });
+            //           }
+            //         },
+            //       ),
+            //     )
+            //   ],
+            // ),
+            SizedBox.fromSize(
+              size: const Size(100, 100),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FutureBuilder<QuerySnapshot?>(
+                    future: FirebaseFirestore.instance
+                        .collection("bookingList")
+                        .where('roomId', isEqualTo: roomUid)
+                        .limit(1)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Error: ${snapshot.error}"),
+                        );
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Text("Booked by:"),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              SizedBox(
+                                width: 15,
+                                height: 15,
+                                child: CircularProgressIndicator(),
+                              )
+                            ],
+                          ),
+                        );
+                      } else if (!snapshot.hasData ||
+                          snapshot.data!.docs.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text("No Booking Data"),
+                        );
+                      } else {
+                        final data = snapshot.data!.docs.first.data()
+                            as Map<String, dynamic>;
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Booked By: ${data['bookedBy'] ?? "Not Booked"}\nBooker Id: ${data['bookerUid'] ?? "Not Booked"}",
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.black),
+                          ),
+                        );
+                      }
+                    })
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

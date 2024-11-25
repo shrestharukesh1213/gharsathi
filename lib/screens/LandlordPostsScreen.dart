@@ -54,7 +54,8 @@ class _LandlordpostsscreenState extends State<Landlordpostsscreen> {
                                   "/landlordroomdetails",
                                   arguments: {
                                     "roomTitle": data[index]['name'],
-                                    "location": data[index]['location'],
+                                    "location": data[index]['location']
+                                        ['address'],
                                     "price": data[index]['price'],
                                     "description": data[index]['description'],
                                     "images": data[index]['images'],
@@ -68,7 +69,7 @@ class _LandlordpostsscreenState extends State<Landlordpostsscreen> {
                               child: Roomcard(
                                   roomTitle: data[index]['name'],
                                   postedBy: data[index]['postedBy'],
-                                  location: data[index]['location'],
+                                  location: data[index]['location']['address'],
                                   price: data[index]['price'],
                                   description: data[index]['description'],
                                   image: data[index]['images'][0],

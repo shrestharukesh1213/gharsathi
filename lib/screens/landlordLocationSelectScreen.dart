@@ -1,20 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gharsathi/services/location_services.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:permission_handler/permission_handler.dart';
 
-class LocationSelectScreen extends StatefulWidget {
-  const LocationSelectScreen({super.key});
+class LandlordLocationSelectScreen extends StatefulWidget {
+  const LandlordLocationSelectScreen({super.key});
 
   @override
-  State<LocationSelectScreen> createState() => _LocationSelectScreenState();
+  State<LandlordLocationSelectScreen> createState() =>
+      _LandlordLocationSelectScreenState();
 }
 
-class _LocationSelectScreenState extends State<LocationSelectScreen> {
+class _LandlordLocationSelectScreenState
+    extends State<LandlordLocationSelectScreen> {
   final MapController mapController = MapController();
   LatLng? currentLocation;
   bool isLoading = true;
@@ -77,46 +78,52 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
     }
   }
 
-  Future<void> updateUserLocation(
-      String? uid, double latitude, double longitude) async {
-    try {
-      final userDoc = FirebaseFirestore.instance.collection('users').doc(uid);
-
-      await userDoc.update({
-        'location': {'latitude': latitude, 'longitude': longitude}
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Updated user location successfully")));
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Select your Location"),
+        title: const Text("Select the property location"),
         centerTitle: true,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (currentLocation != null) {
-            if (user != null) {
-              updateUserLocation(user!.uid, currentLocation!.latitude,
-                  currentLocation!.longitude);
-            }
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Select a Location')),
-            );
-          }
-        },
-        elevation: 6,
-        tooltip: "Confirm and Save Location",
-        child: const Icon(Icons.check),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              if (currentLocation != null) {
+                mapController.move(currentLocation!, 15.0);
+              }
+            },
+            elevation: 6,
+            tooltip: "Navigate to my location",
+            heroTag: null,
+            child: const Icon(Icons.my_location),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: () async {
+              if (currentLocation != null) {
+                String address = await getAddressFromLatLng(
+                    currentLocation!.latitude, currentLocation!.longitude);
+
+                Navigator.pop(context, {
+                  'address': address,
+                  'latitude': currentLocation!.latitude,
+                  'longitude': currentLocation!.longitude
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Select a Location')),
+                );
+              }
+            },
+            elevation: 6,
+            tooltip: "Confirm and Save Property Location",
+            heroTag: null,
+            child: const Icon(Icons.check),
+          ),
+        ],
       ),
       body: isLoading
           ? const Center(

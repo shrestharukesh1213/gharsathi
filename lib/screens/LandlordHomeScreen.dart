@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/model/Rooms.dart';
+import 'package:gharsathi/screens/landlordLocationSelectScreen.dart';
 import 'package:gharsathi/services/RoomServices.dart';
 import 'package:gharsathi/widgets/Esnackbar.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +38,6 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
   @override
   void dispose() {
     titleController.dispose();
-    locationController.dispose();
     priceController.dispose();
     descriptionController.dispose();
     imageController.dispose();
@@ -46,7 +46,6 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
 
   //controller
   final titleController = TextEditingController();
-  final locationController = TextEditingController();
   final priceController = TextEditingController();
   final descriptionController = TextEditingController();
   final imageController = TextEditingController();
@@ -55,7 +54,9 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
 
   String roomTitle = '';
   String? postedBy = '';
-  String location = '';
+  String address = 'Not Set';
+  late double latitude;
+  late double longitude;
   double price = 0;
   String description = '';
   String propertyType = 'Apartment';
@@ -106,7 +107,11 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
         roomTitle: titleController.text,
         postedBy: user!.displayName,
         posterUid: currentUser!.uid,
-        location: locationController.text,
+        location: {
+          'address': address,
+          'latitude': latitude,
+          'longitude': longitude
+        },
         price: priceController.text,
         description: descriptionController.text,
         amenities: selectedAmenities, // Add amenities to room object
@@ -121,7 +126,6 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
               Esnackbar.show(context, "Room added successfully"),
               setState(() {
                 titleController.clear();
-                locationController.clear();
                 priceController.text = '0.0';
                 descriptionController.clear();
                 _selectedImages.clear();
@@ -160,19 +164,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: locationController,
-                decoration: const InputDecoration(labelText: 'Location'),
-                onChanged: (value) {
-                  location = value;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the location';
-                  }
-                  return null;
-                },
-              ),
+
               TextFormField(
                 controller: priceController,
                 decoration: const InputDecoration(labelText: 'Price'),
@@ -202,6 +194,43 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
                   return null;
                 },
               ),
+
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 10.0, 4.0, 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Set Location on Map",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: OutlinedButton(
+                        child: Icon(
+                          Icons.add_location,
+                        ),
+                        onPressed: () async {
+                          final Map<String, dynamic>? result =
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LandlordLocationSelectScreen()));
+                          if (result != null) {
+                            setState(() {
+                              address = result['address'];
+                              latitude = result['latitude'];
+                              longitude = result['longitude'];
+                            });
+                          }
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Text("Location: $address "),
               const SizedBox(height: 20),
 
               const Text('Select Property Type',
