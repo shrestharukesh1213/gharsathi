@@ -28,11 +28,12 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
   //location silder
   double _currentSliderValue = 20;
 
+  double price = 5000;
+
   //property Type
   String dropdownPropertyValue = "Apartment";
 
   //price range
-  RangeValues _currentRangeValues = const RangeValues(0, 100000);
 
   // List of amenities with their current checked status
   final List<String> _amenitiesOptions = [
@@ -70,7 +71,7 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
 
   void _initializeDefaultValues() {
     dropdownLocationValue = "Bhaktapur";
-    _currentRangeValues = const RangeValues(5000.0, 50000.0);
+    price = 5000;
     dropdownPropertyValue = "Apartment";
   }
 
@@ -85,12 +86,9 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
         Preferences? preferences = await preferenceServices.getPreferences();
         if (preferences != null) {
           setState(() {
-            dropdownLocationValue = preferences.location ?? "Bhaktapur";
+            // dropdownLocationValue = preferences.location ?? "Bhaktapur";
 
-            _currentRangeValues = RangeValues(
-                (preferences.priceRange!['min'] as num).toDouble(),
-                (preferences.priceRange!['max'] as num).toDouble());
-
+            priceController.text = preferences.price.toString();
             dropdownPropertyValue = preferences.propertyType ?? "Apartment";
 
             if (preferences.amenities != null) {
@@ -110,6 +108,8 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
     }
   }
 
+  TextEditingController priceController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,97 +117,89 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
         title: const Text('Preference Screen'),
         centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const Text('Location Preference', style: TextStyle(fontSize: 18)),
-          DropdownButton(
-            hint: const Text('Select an option'),
-            items: const [
-              DropdownMenuItem(child: Text("Bhaktapur"), value: "Bhaktapur"),
-              DropdownMenuItem(child: Text("Kathmandu"), value: "Kathmandu"),
-              DropdownMenuItem(child: Text("Lalitpur"), value: "Lalitpur"),
-              DropdownMenuItem(child: Text("Kritipur"), value: "Kritipur"),
-            ],
-            onChanged: (String? newValue) {
-              setState(() {
-                dropdownLocationValue = newValue!;
-              });
-            },
-            value: dropdownLocationValue,
-          ),
-          Slider(
-            value: _currentSliderValue,
-            min: 0,
-            max: 100,
-            divisions: 10,
-            label: _currentSliderValue.round().toString(),
-            onChanged: (double value) {
-              setState(() {
-                _currentSliderValue = value;
-              });
-            },
-          ),
-          const SizedBox(height: 20),
-          const Center(
-              child: Text('Price Range', style: TextStyle(fontSize: 18))),
-          RangeSlider(
-            values: _currentRangeValues,
-            min: 0,
-            max: 100000,
-            divisions: 20,
-            labels: RangeLabels(
-              _currentRangeValues.start.round().toString(),
-              _currentRangeValues.end.round().toString(),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text('Location Preference', style: TextStyle(fontSize: 18)),
+            DropdownButton(
+              hint: const Text('Select an option'),
+              items: const [
+                DropdownMenuItem(child: Text("Bhaktapur"), value: "Bhaktapur"),
+                DropdownMenuItem(child: Text("Kathmandu"), value: "Kathmandu"),
+                DropdownMenuItem(child: Text("Lalitpur"), value: "Lalitpur"),
+                DropdownMenuItem(child: Text("Kritipur"), value: "Kritipur"),
+              ],
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropdownLocationValue = newValue!;
+                });
+              },
+              value: dropdownLocationValue,
             ),
-            onChanged: (RangeValues values) {
-              setState(() {
-                _currentRangeValues = values;
-              });
-            },
-          ),
-          Text(
-            'Selected Range: ${_currentRangeValues.start.round()} - ${_currentRangeValues.end.round()}',
-            style: const TextStyle(fontSize: 18),
-          ),
-          const SizedBox(height: 20),
-          const Text('Property Type', style: TextStyle(fontSize: 18)),
-          DropdownButton(
-            hint: const Text('Select an option'),
-            items: const [
-              DropdownMenuItem(value: 'Apartment', child: Text('Apartment')),
-              DropdownMenuItem(value: 'House', child: Text('House')),
-              DropdownMenuItem(value: 'Room', child: Text('Room')),
-            ],
-            onChanged: (String? newValue) {
-              setState(() {
-                dropdownPropertyValue = newValue!;
-              });
-            },
-            value: dropdownPropertyValue,
-          ),
-          const SizedBox(height: 20),
-          const Text('Nearby Amenities', style: TextStyle(fontSize: 18)),
-          Wrap(
-            spacing: 8.0, // Spacing between chips
-            children:
-                List<Widget>.generate(_amenitiesOptions.length, (int index) {
-              return FilterChip(
-                label: Text(_amenitiesOptions[index]),
-                selected: _isSelected[index],
-                onSelected: (bool selected) {
-                  setState(() {
-                    _isSelected[index] = selected;
-                  });
-                },
-              );
-            }),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-              onPressed: _savePreferencesToFirestore,
-              child: const Text('Save Preferences')),
-        ],
+            Slider(
+              value: _currentSliderValue,
+              min: 0,
+              max: 100,
+              divisions: 10,
+              label: _currentSliderValue.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  _currentSliderValue = value;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            const Center(
+                child:
+                    Text('Price Preference', style: TextStyle(fontSize: 18))),
+            Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: TextFormField(
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                controller: priceController,
+                maxLength: 7,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text('Property Type', style: TextStyle(fontSize: 18)),
+            DropdownButton(
+              hint: const Text('Select an option'),
+              items: const [
+                DropdownMenuItem(value: 'Apartment', child: Text('Apartment')),
+                DropdownMenuItem(value: 'House', child: Text('House')),
+                DropdownMenuItem(value: 'Room', child: Text('Room')),
+              ],
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropdownPropertyValue = newValue!;
+                });
+              },
+              value: dropdownPropertyValue,
+            ),
+            const SizedBox(height: 20),
+            const Text('Nearby Amenities', style: TextStyle(fontSize: 18)),
+            Wrap(
+              spacing: 8.0, // Spacing between chips
+              children:
+                  List<Widget>.generate(_amenitiesOptions.length, (int index) {
+                return FilterChip(
+                  label: Text(_amenitiesOptions[index]),
+                  selected: _isSelected[index],
+                  onSelected: (bool selected) {
+                    setState(() {
+                      _isSelected[index] = selected;
+                    });
+                  },
+                );
+              }),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+                onPressed: _savePreferencesToFirestore,
+                child: const Text('Save Preferences')),
+          ],
+        ),
       ),
     );
   }
@@ -227,12 +219,9 @@ class _TenantpreferencescreenState extends State<Tenantpreferencescreen> {
       Preferences preferences = Preferences(
         user: currentUser.displayName,
         uid: currentUser.uid,
-        location: dropdownLocationValue,
+        // location: dropdownLocationValue,
         distance: _currentSliderValue,
-        priceRange: {
-          'min': _currentRangeValues.start.round(),
-          'max': _currentRangeValues.end.round(),
-        },
+        price: double.parse(priceController.text),
         propertyType: dropdownPropertyValue,
         amenities: selectedAmenities,
       );

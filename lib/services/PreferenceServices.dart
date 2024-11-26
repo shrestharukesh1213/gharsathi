@@ -33,8 +33,7 @@ class PreferenceServices {
             uid: data['uid'],
             location: data['location'],
             distance: data['distance'],
-            priceRange: Map<String, int>.from(
-                data['priceRange'] as Map<dynamic, dynamic>),
+            price: data['price'].toDouble(),
             propertyType: data['propertyType'],
             amenities:
                 List<String>.from(data['amenities'] as Iterable<dynamic>),

@@ -1,9 +1,9 @@
 class Preferences {
   String? user;
   String? uid;
-  String? location;
+  Map<String, dynamic>? location;
   double? distance;
-  Map<String, int>? priceRange;
+  double? price;
   String? propertyType;
   List<String>? amenities;
 
@@ -12,7 +12,7 @@ class Preferences {
     this.uid,
     this.location,
     this.distance,
-    this.priceRange,
+    this.price,
     this.propertyType,
     this.amenities,
   });
@@ -24,7 +24,7 @@ class Preferences {
       'uid': uid,
       'location': location,
       'distance': distance,
-      'priceRange': priceRange,
+      'price': price,
       'propertyType': propertyType,
       'amenities': amenities,
     };
