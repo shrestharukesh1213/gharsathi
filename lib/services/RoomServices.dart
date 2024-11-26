@@ -27,4 +27,13 @@ class Roomservices {
       print(e);
     }
   }
+
+  Future<String> deleteRoom(String roomId) async {
+    try {
+      await FirebaseFirestore.instance.collection('rooms').doc(roomId).delete();
+      return "Deleted Property Successfully";
+    } catch (e) {
+      return "Failed to delete property";
+    }
+  }
 }

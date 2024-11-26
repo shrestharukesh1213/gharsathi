@@ -127,6 +127,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
               setState(() {
                 titleController.clear();
                 priceController.text = '0.0';
+                address = "Not Set";
                 descriptionController.clear();
                 _selectedImages.clear();
                 _isSelected.fillRange(0, _isSelected.length, false);

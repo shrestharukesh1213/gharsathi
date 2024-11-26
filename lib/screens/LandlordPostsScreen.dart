@@ -62,7 +62,7 @@ class _LandlordpostsscreenState extends State<Landlordpostsscreen> {
                                     "amenities": data[index]['amenities'],
                                     "roomId": data[index].id,
                                     "propertyType": data[index]['propertyType'],
-                                    "postDate": data[index]['postDate']
+                                    "postDate": data[index]['postDate'],
                                   },
                                 );
                               },

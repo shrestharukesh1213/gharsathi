@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/screens/landlordLocationSelectScreen.dart';
+import 'package:gharsathi/services/RoomServices.dart';
 
 class Landlordroomdetails extends StatefulWidget {
   const Landlordroomdetails({super.key});
@@ -12,7 +13,10 @@ class Landlordroomdetails extends StatefulWidget {
 }
 
 class _LandlordroomdetailsState extends State<Landlordroomdetails> {
-  String address = 'Not Set';
+  String location = "";
+  bool _isInitialized = false;
+  Roomservices roomservices = Roomservices();
+
   late double latitude;
   late double longitude;
   final List<String> images = [];
@@ -31,26 +35,76 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
   };
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final data =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+      location = data['location'];
+      _isInitialized = true;
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final data =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
     final String roomTitle = data['roomTitle'];
-    final String location = data['location'];
     final String price = data['price'];
     final String propertyType = data['propertyType'] ?? "Not found";
-    print(propertyType);
     final String description = data['description'];
     final List<String> images = List<String>.from(data['images']);
     // Extract amenities
     final List<String> amenities =
         data['amenities'] != null ? List<String>.from(data['amenities']) : [];
-    final roomUid = data['roomId'];
+    final roomId = data['roomId'];
     final String postDate = data['postDate'];
+
+    Future<void> updateRoomLocation(String roomId, String address,
+        double latitude, double longitude) async {
+      DocumentReference roomDoc =
+          FirebaseFirestore.instance.collection('rooms').doc(roomId);
+
+      DocumentSnapshot snapshot = await roomDoc.get();
+
+      try {
+        if (snapshot.exists) {
+          await roomDoc.update({
+            "location": {
+              "address": address,
+              "latitude": latitude,
+              "longitude": longitude,
+            },
+          });
+
+          setState(() {
+            location = address;
+          });
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Room doesn't exist")));
+        }
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed updating location: $e")));
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(roomTitle),
+        actions: <Widget>[
+          TextButton(
+              onPressed: () async {
+                final String deleted = await roomservices.deleteRoom(roomId);
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(deleted)));
+              },
+              child: Icon(Icons.delete_forever))
+        ],
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -145,33 +199,33 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
                 ],
               ),
             ),
-            // Row(
-            //   children: [
-            //     Text("Change Location"),
-            //     Padding(
-            //       padding: const EdgeInsets.only(left: 8.0),
-            //       child: OutlinedButton(
-            //         child: Icon(
-            //           Icons.add_location,
-            //         ),
-            //         onPressed: () async {
-            //           final Map<String, dynamic>? result = await Navigator.push(
-            //               context,
-            //               MaterialPageRoute(
-            //                   builder: (context) =>
-            //                       const LandlordLocationSelectScreen()));
-            //           if (result != null) {
-            //             setState(() {
-            //               address = result['address'];
-            //               latitude = result['latitude'];
-            //               longitude = result['longitude'];
-            //             });
-            //           }
-            //         },
-            //       ),
-            //     )
-            //   ],
-            // ),
+            Row(
+              children: [
+                Text("Change Location"),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: OutlinedButton(
+                    child: Icon(
+                      Icons.add_location,
+                    ),
+                    onPressed: () async {
+                      final Map<String, dynamic>? result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const LandlordLocationSelectScreen()));
+                      if (result != null) {
+                        updateRoomLocation(roomId, result['address'],
+                            result['latitude'], result['longitude']);
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Location Updated Successfully")));
+                      }
+                    },
+                  ),
+                )
+              ],
+            ),
             SizedBox.fromSize(
               size: const Size(100, 100),
             ),
@@ -182,7 +236,7 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
                 FutureBuilder<QuerySnapshot?>(
                     future: FirebaseFirestore.instance
                         .collection("bookingList")
-                        .where('roomId', isEqualTo: roomUid)
+                        .where('roomId', isEqualTo: roomId)
                         .limit(1)
                         .get(),
                     builder: (context, snapshot) {
