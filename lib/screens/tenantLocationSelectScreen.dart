@@ -4,11 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gharsathi/services/location_services.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+enum NavigationSource { userProfile, userPreferences }
 
 class TenantLocationSelectScreen extends StatefulWidget {
-  const TenantLocationSelectScreen({super.key});
+  final NavigationSource navigationSource;
+  const TenantLocationSelectScreen({super.key, required this.navigationSource});
 
   @override
   State<TenantLocationSelectScreen> createState() =>
@@ -119,11 +122,22 @@ class _TenantLocationSelectScreenState
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
-            onPressed: () {
-              if (currentLocation != null) {
-                if (user != null) {
-                  updateUserLocation(user!.uid, currentLocation!.latitude,
-                      currentLocation!.longitude);
+            onPressed: () async {
+              if (currentLocation != null && user != null) {
+                switch (widget.navigationSource) {
+                  case NavigationSource.userProfile:
+                    updateUserLocation(user!.uid, currentLocation!.latitude,
+                        currentLocation!.longitude);
+
+                  case NavigationSource.userPreferences:
+                    String address = await getAddressFromLatLng(
+                        currentLocation!.latitude, currentLocation!.longitude);
+
+                    Navigator.pop(context, {
+                      'address': address,
+                      'latitude': currentLocation!.latitude,
+                      'longitude': currentLocation!.longitude
+                    });
                 }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(

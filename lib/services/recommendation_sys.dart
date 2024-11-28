@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gharsathi/model/Preferences.dart';
@@ -10,10 +8,10 @@ class RecommendationSys {
 
   // Weights for different features
   static const Map<String, double> featureWeights = {
-    'location': 0.3,
+    'location': 0.4,
     'price': 0.3,
-    'propertyType': 0.2,
-    'amenities': 0.2,
+    'propertyType': 0.15,
+    'amenities': 0.15,
   };
 
   Future<Preferences?> getUserPreferences(String? uid) async {
@@ -26,7 +24,13 @@ class RecommendationSys {
             userPreferencesSnapshot.data() as Map<String, dynamic>;
 
         return Preferences(
-          location: data['location'],
+          location: data['location'] is Map
+              ? {
+                  'address': data['location']['address'],
+                  'latitude': data['location']['latitude'],
+                  'longitude': data['location']['longitude'],
+                }
+              : null,
           distance: data['distance'],
           price: data['price'],
           propertyType: data['propertyType'],
@@ -34,7 +38,9 @@ class RecommendationSys {
         );
       }
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
     return null;
   }
@@ -51,15 +57,29 @@ class RecommendationSys {
     if (userPreferences.location != null && property['location'] != null) {
       try {
         // Extract coordinates from location
-        double? userLatitude = userPreferences.location?['latitude'];
+        Map<String, dynamic> userLocation = userPreferences.location!;
+        Map<String, dynamic> propertyLocation = property['location'];
 
         // Ensure we have valid coordinate lists with at least 2 elements
-        // if (userCoordinates.length >= 2 && propertyCoordinates.length >= 2) {
-        //   double distance = await calculateDistance(
-        //       userCoordinates[0], 
-        //       userCoordinates[1], 
-        //       propertyCoordinates[0],
-        //       propertyCoordinates[1]);
+        if (userLocation['latitude'] != null &&
+            userLocation['longitude'] != null &&
+            propertyLocation['latitude'] != null &&
+            propertyLocation['longitude'] != null) {
+          //Send user and property coordinates to calculateDistance function and
+          //receive the distance between properties
+          double distance = await calculateDistance(
+              userLocation['latitude'],
+              userLocation['longitude'],
+              propertyLocation['latitude'],
+              propertyLocation['longitude']);
+
+          //Print latitudes and longitudes for debugging
+          // if (kDebugMode) {
+          //   print("user lat: ${userLocation['latitude']}");
+          //   print("user long: ${userLocation['longitude']}");
+          //   print("prop lat ${propertyLocation['latitude']}");
+          //   print("prop long ${propertyLocation['longitude']}");
+          // }
 
           // Set maximum distance threshold from user preferences
           double maxDistance = userPreferences.distance ?? 50.0;
@@ -69,8 +89,8 @@ class RecommendationSys {
           similarityScore += locationScore * featureWeights['location']!;
 
           if (kDebugMode) {
-            print('Distance: ${distance.toStringAsFixed(2)} km');
-            print('Location Score: ${locationScore.toStringAsFixed(2)}');
+            // print('Distance: ${distance.toStringAsFixed(2)} km');
+            // print('Location Score: ${locationScore.toStringAsFixed(2)}');
           }
         } else {
           // Handle incomplete location data
@@ -187,7 +207,7 @@ class RecommendationSys {
         math.pow(math.sin(dLon / 2), 2) * math.cos(lat1) * math.cos(lat2);
 
     double rad = 6371;
-    double value2 = math.asin(math.sqrt(value));
+    double value2 = 2 * math.asin(math.sqrt(value));
     double distance = rad * value2;
     return distance;
   }

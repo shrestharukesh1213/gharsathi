@@ -31,7 +31,11 @@ class PreferenceServices {
           return Preferences(
             user: data['user'],
             uid: data['uid'],
-            location: data['location'],
+            location: {
+              'address': data['location']['address'],
+              'latitude': data['location']['latitude'],
+              'longitude': data['location']['location'],
+            },
             distance: data['distance'],
             price: data['price'].toDouble(),
             propertyType: data['propertyType'],
