@@ -141,11 +141,13 @@ class _RoomcardState extends State<Roomcard> {
                           Icons.location_on_outlined,
                           size: 25,
                         ),
-                        Text(
-                          widget.location,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.black54,
+                        Expanded(
+                          child: Text(
+                            widget.location,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black54,
+                            ),
                           ),
                         ),
                       ],

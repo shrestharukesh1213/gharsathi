@@ -1,15 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gharsathi/model/Preferences.dart';
+import 'dart:math' as math;
 
 class RecommendationSys {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Weights for different features
   static const Map<String, double> featureWeights = {
-    'location': 0.3,
+    'location': 0.4,
     'price': 0.3,
-    'propertyType': 0.2,
-    'amenities': 0.2,
+    'propertyType': 0.15,
+    'amenities': 0.15,
   };
 
   Future<Preferences?> getUserPreferences(String? uid) async {
@@ -22,15 +24,23 @@ class RecommendationSys {
             userPreferencesSnapshot.data() as Map<String, dynamic>;
 
         return Preferences(
-          location: data['location'],
+          location: data['location'] is Map
+              ? {
+                  'address': data['location']['address'],
+                  'latitude': data['location']['latitude'],
+                  'longitude': data['location']['longitude'],
+                }
+              : null,
           distance: data['distance'],
-          priceRange: Map<String, int>.from(data['priceRange'] ?? []),
+          price: data['price'],
           propertyType: data['propertyType'],
           amenities: List<String>.from(data['amenities'] ?? []),
         );
       }
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
     return null;
   }
@@ -45,36 +55,57 @@ class RecommendationSys {
     // Location similarity using distance calculation
     // Location choosing on the map is not implemented so default of 0.0 is set for now
     if (userPreferences.location != null && property['location'] != null) {
-      // double distance = await calculateDistance(
-      //   userPreferences.location!,
-      //   property['location'],
-      // );
+      try {
+        // Extract coordinates from location
+        Map<String, dynamic> userLocation = userPreferences.location!;
+        Map<String, dynamic> propertyLocation = property['location'];
 
-      // Normalize distance score (closer = higher score)
-      // double maxDistance = userPreferences.distance ?? 50.0;
-      // double locationScore = 1.0 - (distance / maxDistance).clamp(0.0, 1.0);
-      double locationScore;
-      if (userPreferences.location == property['location']) {
-        locationScore = 1.0;
-      } else {
-        locationScore = 0.0;
+        // Ensure we have valid coordinate lists with at least 2 elements
+        if (userLocation['latitude'] != null &&
+            userLocation['longitude'] != null &&
+            propertyLocation['latitude'] != null &&
+            propertyLocation['longitude'] != null) {
+          //Send user and property coordinates to calculateDistance function and
+          //receive the distance between properties
+          double distance = await calculateDistance(
+              userLocation['latitude'],
+              userLocation['longitude'],
+              propertyLocation['latitude'],
+              propertyLocation['longitude']);
+
+          //Print latitudes and longitudes for debugging
+          // if (kDebugMode) {
+          //   print("user lat: ${userLocation['latitude']}");
+          //   print("user long: ${userLocation['longitude']}");
+          //   print("prop lat ${propertyLocation['latitude']}");
+          //   print("prop long ${propertyLocation['longitude']}");
+          // }
+
+          // Set maximum distance threshold from user preferences
+          double maxDistance = userPreferences.distance ?? 50.0;
+
+          // Calculate location score
+          double locationScore = 1.0 - (distance / maxDistance).clamp(0.0, 1.0);
+          similarityScore += locationScore * featureWeights['location']!;
+
+          if (kDebugMode) {
+            // print('Distance: ${distance.toStringAsFixed(2)} km');
+            // print('Location Score: ${locationScore.toStringAsFixed(2)}');
+          }
+        } else {
+          // Handle incomplete location data
+          print('Incomplete location coordinates');
+        }
+      } catch (e) {
+        print('Location scoring error: $e');
       }
-
-      similarityScore += locationScore * featureWeights['location']!;
-      //print("Location Score: $locationScore");
     }
 
     // Price range similarity
-    if (userPreferences.priceRange != null && property['price'] != null) {
-      int propertyPrice;
-      if (property['price'] is String) {
-        propertyPrice = int.tryParse(property['price']) ??
-            0; // Default to 0 if parsing fails
-      } else {
-        propertyPrice = property['price'] as int;
-      }
+    if (userPreferences.price != null && property['price'] != null) {
+      double propertyPrice = double.parse(property['price']);
       double priceScore = calculatePriceScore(
-        userPreferences.priceRange!,
+        userPreferences.price!,
         propertyPrice,
       );
       //print("Price Score: $priceScore");
@@ -116,25 +147,11 @@ class RecommendationSys {
   }
 
   // Calculate price similarity score
-  double calculatePriceScore(
-      Map<String, int> preferredRange, int propertyPrice) {
-    int minPrice = preferredRange['min'] ?? 0;
-    int maxPrice = preferredRange['max'] ?? double.maxFinite.toInt();
+  double calculatePriceScore(double price, double propertyPrice) {
+    // Calculate the deviation as the absolute difference between userPrice and propertyPrice
+    double deviation = (price - propertyPrice).abs() / price;
 
-    // If price is within range, give full score
-    if (propertyPrice >= minPrice && propertyPrice <= maxPrice) {
-      return 1.0;
-    }
-
-    // Calculate how far outside the range the price is
-    double deviation;
-    if (propertyPrice < minPrice) {
-      deviation = (minPrice - propertyPrice) / minPrice;
-    } else {
-      deviation = (propertyPrice - maxPrice) / maxPrice;
-    }
-
-    // Convert deviation to a similarity score (1 - normalized deviation)
+    // Convert the deviation into a similarity score (1 - normalized deviation)
     return (1 - deviation.clamp(0.0, 1.0));
   }
 
@@ -176,9 +193,22 @@ class RecommendationSys {
         .toList();
   }
 
-  //Method to calculate distance between two locations
-  Future<double> calculateDistance(String location1, String location2) async {
-    //Not implemented
-    return 0.0;
+  //Method to calculate distance between two locations using Haversine formula
+  Future<double> calculateDistance(
+      double lat1, double long1, double lat2, double long2) async {
+    //Calc distance between latitudes and longitudes
+    double dLat = (lat2 - lat1) * math.pi / 180.0;
+    double dLon = (long2 - long1) * math.pi / 180.0;
+
+    lat1 = (lat1) * math.pi / 180.0;
+    lat2 = (lat2) * math.pi / 180.0;
+
+    double value = math.pow(math.sin(dLat / 2), 2) +
+        math.pow(math.sin(dLon / 2), 2) * math.cos(lat1) * math.cos(lat2);
+
+    double rad = 6371;
+    double value2 = 2 * math.asin(math.sqrt(value));
+    double distance = rad * value2;
+    return distance;
   }
 }

@@ -8,7 +8,6 @@ import 'package:gharsathi/screens/LandlordHomeScreen.dart';
 import 'package:gharsathi/screens/LandlordPostsScreen.dart';
 import 'package:gharsathi/screens/LandlordProfileScreen.dart';
 import 'package:gharsathi/screens/LandlordRoomDetails.dart';
-import 'package:gharsathi/screens/landlordLocationSelectScreen.dart';
 import 'package:gharsathi/screens/tenantLocationSelectScreen.dart';
 import 'package:gharsathi/screens/LoginScreen.dart';
 import 'package:gharsathi/screens/RegisterScreen.dart';
@@ -62,7 +61,6 @@ class MyApp extends StatelessWidget {
           '/landlordposts': (context) => Landlordpostsscreen(),
           '/landlordroomdetails': (context) => Landlordroomdetails(),
           '/changepass': (context) => Changepasswordscreen(),
-          '/tenantLocationSelect': (context) => TenantLocationSelectScreen(),
           '/editprofile': (context) => EditProfileScreen(),
         },
       ),

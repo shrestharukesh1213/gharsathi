@@ -31,10 +31,13 @@ class PreferenceServices {
           return Preferences(
             user: data['user'],
             uid: data['uid'],
-            location: data['location'],
+            location: {
+              'address': data['location']['address'],
+              'latitude': data['location']['latitude'],
+              'longitude': data['location']['location'],
+            },
             distance: data['distance'],
-            priceRange: Map<String, int>.from(
-                data['priceRange'] as Map<dynamic, dynamic>),
+            price: data['price'].toDouble(),
             propertyType: data['propertyType'],
             amenities:
                 List<String>.from(data['amenities'] as Iterable<dynamic>),

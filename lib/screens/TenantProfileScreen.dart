@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gharsathi/screens/tenantLocationSelectScreen.dart';
 import 'package:gharsathi/services/authentication.dart';
 
 class Tenantprofilescreen extends StatefulWidget {
@@ -147,7 +148,14 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
                       ),
                       ListTile(
                         onTap: () {
-                          Navigator.pushNamed(context, '/tenantLocationSelect');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      TenantLocationSelectScreen(
+                                        navigationSource:
+                                            NavigationSource.userProfile,
+                                      )));
                         },
                         leading: const Icon(Icons.location_on),
                         title: const Text("My Location"),
