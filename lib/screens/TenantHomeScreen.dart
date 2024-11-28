@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/model/Preferences.dart';
@@ -16,6 +17,8 @@ class Tenanthomescreen extends StatefulWidget {
 }
 
 class _TenanthomescreenState extends State<Tenanthomescreen> {
+  String searchQuery = '';
+
   final SearchController searchController = SearchController();
   bool _isLoading = false;
   final Preferences userPreferences = Preferences();
@@ -82,68 +85,89 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SearchAnchor(
-                builder:
-                    (BuildContext context, SearchController searchController) {
-                  return SearchBar(
-                    controller: searchController,
-                    padding: const WidgetStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.all(6),
-                    ),
-                    onTap: () {
-                      searchController.openView();
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // Align items to the start
+                children: [
+                  CupertinoSearchTextField(
+                    placeholder: 'Search rooms',
+                    onChanged: (value) {
+                      setState(() {
+                        searchQuery = value.trim(); // Update the search query
+                      });
                     },
-                    onChanged: (_) {
-                      searchController.openView();
-                    },
-                    leading: const Icon(Icons.search),
-                    hintText: "Search House/Room",
-                  );
-                },
-                suggestionsBuilder: (BuildContext context,
-                    SearchController searchController) async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-
-                  final results = await _searchItems(searchController.text);
-
-                  setState(() {
-                    _isLoading = false;
-                  });
-
-                  return results.map((doc) {
-                    final data = doc.data() as Map<String, dynamic>;
-                    if (kDebugMode) {
-                      print(data);
-                    }
-
-                    return ListTile(
-                      title: Text(data['name'] ?? "No name"),
-                      subtitle: Text(data['price'] ?? "No price"),
-                      onTap: () {
-                        searchController.closeView("");
-                        Navigator.pushNamed(context, '/details', arguments: {
-                          "roomTitle": data['name'] ?? "No name",
-                          "location":
-                              data['location']['address'] ?? "No location",
-                          "postedBy": data['postedBy'] ?? "No poster",
-                          "propertyType": data['propertyType'],
-                          "price": data['price'] ?? "No price",
-                          "description":
-                              data['description'] ?? "No description",
-                          "images": data['images'] is List
-                              ? List<String>.from(data['images'])
-                              : <String>[],
-                          "amenities": data['amenities'] is List
-                              ? List<String>.from(data['amenities'])
-                              : <String>[],
-                          "roomId": doc.id,
-                        });
+                  ),
+                  if (searchQuery.isNotEmpty) ...[
+                    SizedBox(height: 20), // Spacing between widgets
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("rooms")
+                          .where("propertyType",
+                              isGreaterThanOrEqualTo: searchQuery)
+                          .where("propertyType",
+                              isLessThanOrEqualTo: searchQuery + '\uf8ff')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CupertinoActivityIndicator());
+                        } else if (snapshot.hasError) {
+                          return const Center(
+                              child: Text('Error loading data'));
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Center(child: Text('No results found'));
+                        } else {
+                          final data = snapshot.data!.docs;
+                          return ListView.builder(
+                            itemCount: data.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    "/details",
+                                    arguments: {
+                                      "roomTitle": data[index]['name'],
+                                      "postedBy": data[index]['postedBy'],
+                                      "location": data[index]['location']
+                                          ['address'],
+                                      "price": data[index]['price'],
+                                      "description": data[index]['description'],
+                                      "images": data[index]['images'],
+                                      "amenities": data[index]['amenities'],
+                                      "roomId": data[index].id,
+                                      "propertyType": data[index]
+                                          ['propertyType'],
+                                      "postDate": data[index]['postDate']
+                                    },
+                                  );
+                                },
+                                child: ListTile(
+                                  leading: SizedBox(
+                                    width: 50, // Set a fixed width
+                                    height: 50, // Set a fixed height
+                                    child: Image.network(
+                                      data[index]['images'][0],
+                                      fit: BoxFit
+                                          .cover, // Ensure the image fits the box
+                                    ),
+                                  ),
+                                  title: Text(data[index]['name']),
+                                  subtitle: Text(data[index]['description']),
+                                  trailing: Icon(Icons.arrow_forward_ios),
+                                ),
+                              );
+                            },
+                          );
+                        }
                       },
-                    );
-                  }).toList();
-                },
+                    ),
+                  ],
+                ],
               ),
             ),
           ),
