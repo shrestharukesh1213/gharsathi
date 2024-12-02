@@ -103,7 +103,7 @@ class RecommendationSys {
 
     // Price range similarity
     if (userPreferences.price != null && property['price'] != null) {
-      double propertyPrice = double.parse(property['price']);
+      double propertyPrice = (property['price'] as num).toDouble();
       double priceScore = calculatePriceScore(
         userPreferences.price!,
         propertyPrice,

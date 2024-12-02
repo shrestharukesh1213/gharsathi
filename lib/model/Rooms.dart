@@ -3,7 +3,7 @@ class Rooms {
   String? posterUid;
   String? postedBy;
   Map<String, dynamic>? location;
-  String? price;
+  double? price;
   String? description;
   List<dynamic> amenities;
   List<String?>? images;

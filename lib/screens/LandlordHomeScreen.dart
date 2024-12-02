@@ -112,7 +112,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
           'latitude': latitude,
           'longitude': longitude
         },
-        price: priceController.text,
+        price: double.parse(priceController.text),
         description: descriptionController.text,
         amenities: selectedAmenities, // Add amenities to room object
         images: uploadedUrls,

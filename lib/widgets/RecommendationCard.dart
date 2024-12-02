@@ -7,7 +7,7 @@ class RecommendationCard extends StatelessWidget {
   final String propertyType;
   final String description;
   final String location;
-  final String price;
+  final double price;
   final String image;
   final List amenities;
   final String postDate;
@@ -89,7 +89,7 @@ class RecommendationCard extends StatelessWidget {
 
                     // Price
                     Text(
-                      price,
+                      "$price",
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,

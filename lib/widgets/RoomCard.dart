@@ -9,7 +9,7 @@ class Roomcard extends StatefulWidget {
   final String postedBy;
   final String description;
   final String location;
-  final String price;
+  final double price;
   final String image;
   final List<dynamic> amenities;
   final String propertyType;
@@ -165,7 +165,7 @@ class _RoomcardState extends State<Roomcard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'NPR.${widget.price}',
+                        'NPR. ${widget.price}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       if (userType == "Tenant")
