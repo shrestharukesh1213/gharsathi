@@ -172,7 +172,7 @@ class RecommendationSys {
     //Calculate Jaccard Similarity score for properties
     for (var property in propertiesSnapshot.docs) {
       double score = await calculateSimilarityScore(userPreferences, property);
-      print("Score: $score");
+      // print("Score: $score");
 
       //Only show rooms with Weighted Similarity score greater than 0.3
       if (score > 0.3) {

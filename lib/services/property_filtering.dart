@@ -12,7 +12,6 @@ class PropertyFiltering {
       double? maxPrice,
       String? propertyType}) async {
     Query query = _firestore.collection("rooms");
-    print(query);
 
     try {
       if (minPrice != null) {
@@ -24,17 +23,10 @@ class PropertyFiltering {
       }
 
       if (propertyType != null) {
-        query = query.where("propertyType", isLessThanOrEqualTo: propertyType);
+        query = query.where("propertyType", isEqualTo: propertyType);
       }
 
       QuerySnapshot querySnapshot = await query.get();
-
-      print("Rooms: ${querySnapshot.docs}");
-      for (var room in querySnapshot.docs) {
-        print(room['name']);
-      }
-
-      print('Query Result 2: ${querySnapshot.docs}');
 
       List<Map<String, dynamic>> results = querySnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
@@ -55,9 +47,6 @@ class PropertyFiltering {
           return false;
         }).toList();
 
-        for (var room in filteredResults) {
-          print(room['name']);
-        }
         return filteredResults;
       }
 
@@ -84,7 +73,7 @@ class PropertyFiltering {
     double rad = 6371;
     double value2 = 2 * math.asin(math.sqrt(value));
     double distance = rad * value2;
-    print("distance: $distance");
+    // print("distance: $distance");
     return distance;
   }
 }

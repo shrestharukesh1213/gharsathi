@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/services/property_filtering.dart';
+import 'package:gharsathi/widgets/RoomCard.dart';
 
 class PropertyFilterDialog extends StatefulWidget {
   const PropertyFilterDialog({super.key});
@@ -117,37 +118,50 @@ class _PropertyFilterDialogState extends State<PropertyFilterDialog> {
                   children: [
                     TextButton(
                         onPressed: () async {
-                          if (double.parse(minPriceController.text) >
-                              double.parse(maxPriceController.text)) {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                            "Max Price can't be lesser than Min Price"),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("Ok"))
-                                      ],
-                                    ),
-                                  );
-                                });
+                          if (minPriceController.text.isNotEmpty &&
+                              maxPriceController.text.isNotEmpty) {
+                            if (double.parse(minPriceController.text) >
+                                double.parse(maxPriceController.text)) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                              "Max Price can't be lesser than Min Price"),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("Ok"))
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            }
                           }
-                          propertyFiltering.filterProperties(
-                              latitude: latitude,
-                              longitude: longitude,
-                              maxDistKm: double.parse(distanceController.text),
-                              minPrice: double.parse(minPriceController.text),
-                              maxPrice: double.parse(maxPriceController.text),
-                              propertyType: filterPropertyValue);
+
+                          final results =
+                              await propertyFiltering.filterProperties(
+                                  latitude: latitude,
+                                  longitude: longitude,
+                                  maxDistKm: double.tryParse(
+                                          distanceController.text) ??
+                                      double.infinity,
+                                  minPrice: double.tryParse(
+                                          minPriceController.text) ??
+                                      0.0,
+                                  maxPrice: double.tryParse(
+                                          maxPriceController.text) ??
+                                      double.infinity,
+                                  propertyType: filterPropertyValue);
+
+                          Navigator.pop(context, results);
                         },
                         child: Text("Filter")),
                     TextButton(

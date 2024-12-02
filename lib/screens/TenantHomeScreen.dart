@@ -26,6 +26,8 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
 
   Future<List<DocumentSnapshot>>? _postedRoomsFuture;
 
+  List<Map<String, dynamic>>? filteredRooms = [];
+
   String? getCurrentUserUid() {
     final user = FirebaseAuth.instance.currentUser;
     return user?.uid; // Returns null if no user is signed in
@@ -64,6 +66,7 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
   void initState() {
     super.initState();
     _postedRoomsFuture = _fetchRooms();
+    filteredRooms = null;
   }
 
   @override
@@ -240,12 +243,19 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                   ),
                 ),
                 TextButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return PropertyFilterDialog();
-                          });
+                    onPressed: () async {
+                      final List<Map<String, dynamic>>? result =
+                          await showDialog<List<Map<String, dynamic>>>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return PropertyFilterDialog();
+                        },
+                      );
+                      print("Result: ${result}");
+                      setState(() {
+                        filteredRooms = result;
+                      });
+                      print(filteredRooms);
                     },
                     child: Row(
                       children: [
@@ -259,69 +269,122 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
               ],
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return FutureBuilder<List<DocumentSnapshot>>(
-                  future: _postedRoomsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: Text('Failed to load data'),
-                      );
-                    } else if (!snapshot.hasData) {
-                      return const Center(child: Text('No data found'));
-                    } else {
-                      final data = snapshot.data!;
-
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                "/details",
-                                arguments: {
-                                  "roomTitle": data[index]['name'],
-                                  "postedBy": data[index]['postedBy'],
-                                  "location": data[index]['location']
-                                      ['address'],
-                                  "price": data[index]['price'],
-                                  "description": data[index]['description'],
-                                  "images": data[index]['images'],
-                                  "amenities": data[index]['amenities'],
-                                  "roomId": data[index].id,
-                                  "propertyType": data[index]['propertyType'],
-                                  "postDate": data[index]['postDate']
-                                },
-                              );
+          (filteredRooms != null)
+              ? SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: filteredRooms!.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            "/details",
+                            arguments: {
+                              "roomTitle": filteredRooms![index]['name'],
+                              "postedBy": filteredRooms![index]['postedBy'],
+                              "location": filteredRooms![index]['location']
+                                  ['address'],
+                              "price": filteredRooms![index]['price'],
+                              "description": filteredRooms![index]
+                                  ['description'],
+                              "images": filteredRooms![index]['images'],
+                              "amenities": filteredRooms![index]['amenities'],
+                              "roomId": "",
+                              "propertyType": filteredRooms![index]
+                                  ['propertyType'],
+                              "postDate": filteredRooms![index]['postDate']
                             },
-                            child: Roomcard(
-                              roomTitle: data[index]['name'],
-                              postedBy: data[index]['postedBy'],
-                              location: data[index]['location']['address'],
-                              price: (data[index]['price'] as num).toDouble(),
-                              description: data[index]['description'],
-                              image: data[index]['images'][0],
-                              amenities: data[index]['amenities'],
-                              propertyType: data[index]['propertyType'],
-                              postDate: data[index]['postDate'],
-                            ),
                           );
                         },
+                        child: Roomcard(
+                          roomTitle: filteredRooms![index]['name'],
+                          postedBy: filteredRooms![index]['postedBy'],
+                          location: filteredRooms![index]['location']
+                              ['address'],
+                          price: (filteredRooms![index]['price'] as num)
+                              .toDouble(),
+                          description: filteredRooms![index]['description'],
+                          image: filteredRooms![index]['images'][0],
+                          amenities: filteredRooms![index]['amenities'],
+                          propertyType: filteredRooms![index]['propertyType'],
+                          postDate: filteredRooms![index]['postDate'],
+                        ),
                       );
-                    }
-                  },
-                );
-              },
-              childCount: 1, // Ensuring we are just building once
-            ),
-          ),
+                    },
+                  );
+                }, childCount: 1))
+              : SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return FutureBuilder<List<DocumentSnapshot>>(
+                        future: _postedRoomsFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                              child: Text('Failed to load data'),
+                            );
+                          } else if (!snapshot.hasData) {
+                            return const Center(child: Text('No data found'));
+                          } else {
+                            final data = snapshot.data!;
+
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: data.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      "/details",
+                                      arguments: {
+                                        "roomTitle": data[index]['name'],
+                                        "postedBy": data[index]['postedBy'],
+                                        "location": data[index]['location']
+                                            ['address'],
+                                        "price": data[index]['price'],
+                                        "description": data[index]
+                                            ['description'],
+                                        "images": data[index]['images'],
+                                        "amenities": data[index]['amenities'],
+                                        "roomId": data[index].id,
+                                        "propertyType": data[index]
+                                            ['propertyType'],
+                                        "postDate": data[index]['postDate']
+                                      },
+                                    );
+                                  },
+                                  child: Roomcard(
+                                    roomTitle: data[index]['name'],
+                                    postedBy: data[index]['postedBy'],
+                                    location: data[index]['location']
+                                        ['address'],
+                                    price: (data[index]['price'] as num)
+                                        .toDouble(),
+                                    description: data[index]['description'],
+                                    image: data[index]['images'][0],
+                                    amenities: data[index]['amenities'],
+                                    propertyType: data[index]['propertyType'],
+                                    postDate: data[index]['postDate'],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        },
+                      );
+                    },
+                    childCount: 1, // Ensuring we are just building once
+                  ),
+                ),
         ],
       ),
     );
