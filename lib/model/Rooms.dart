@@ -3,7 +3,6 @@ class Rooms {
   String? posterUid;
   String? postedBy;
   String? postedByEmail;
-  String? postedByUid;
   Map<String, dynamic>? location;
   double? price;
   String? description;
@@ -18,7 +17,6 @@ class Rooms {
       required this.postedBy,
       required this.posterUid,
       this.postedByEmail = '',
-      this.postedByUid = '',
       required this.location,
       required this.price,
       required this.description,
@@ -35,7 +33,6 @@ class Rooms {
       'posterUid': posterUid,
       'postedBy': postedBy,
       'postedByEmail': postedByEmail,
-      'postedByUid': postedByUid,
       'location': location,
       'price': price,
       'description': description,

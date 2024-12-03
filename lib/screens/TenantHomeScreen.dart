@@ -144,7 +144,10 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                                       "roomId": data[index].id,
                                       "propertyType": data[index]
                                           ['propertyType'],
-                                      "postDate": data[index]['postDate']
+                                      "postDate": data[index]['postDate'],
+                                      "postedByEmail": data[index]
+                                          ['postedByEmail'],
+                                      "posterUid": data[index]['posterUid'],
                                     },
                                   );
                                 },
@@ -295,7 +298,10 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                               "roomId": "",
                               "propertyType": filteredRooms![index]
                                   ['propertyType'],
-                              "postDate": filteredRooms![index]['postDate']
+                              "postDate": filteredRooms![index]['postDate'],
+                              "postedByEmail": filteredRooms![index]
+                                  ['postedByEmail'],
+                              "posterUid": filteredRooms![index]['posterUid'],
                             },
                           );
                         },
@@ -358,7 +364,10 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                                         "roomId": data[index].id,
                                         "propertyType": data[index]
                                             ['propertyType'],
-                                        "postDate": data[index]['postDate']
+                                        "postDate": data[index]['postDate'],
+                                        "postedByEmail": data[index]
+                                            ['postedByEmail'],
+                                        "posterUid": data[index]['posterUid'],
                                       },
                                     );
                                   },

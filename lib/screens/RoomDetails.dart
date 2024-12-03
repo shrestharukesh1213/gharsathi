@@ -38,7 +38,7 @@ class _RoomdetailsState extends State<Roomdetails> {
     final String roomTitle = data['roomTitle'] ?? 'Unknown Room';
     final String postedBy = data['postedBy'] ?? 'Unknown';
     final String postedByEmail = data['postedByEmail'] ?? '';
-    final String postedByUid = data['postedByUid'] ?? '';
+    final String posterUid = data['posterUid'] ?? '';
     final String location = data['location'] ?? 'Unknown Location';
     final double price = (data['price'] as num).toDouble();
     final String description = data['description'] ?? 'No Description';
@@ -186,7 +186,7 @@ class _RoomdetailsState extends State<Roomdetails> {
                               MaterialPageRoute(
                                 builder: (context) => Chatscreen(
                                   receiverEmail: postedByEmail,
-                                  receiverID: postedByUid,
+                                  receiverID: posterUid,
                                 ),
                               ),
                             );
