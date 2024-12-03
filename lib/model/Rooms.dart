@@ -5,7 +5,7 @@ class Rooms {
   String? postedByEmail;
   String? postedByUid;
   Map<String, dynamic>? location;
-  String? price;
+  double? price;
   String? description;
   List<dynamic> amenities;
   List<String?>? images;

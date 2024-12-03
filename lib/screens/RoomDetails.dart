@@ -40,7 +40,7 @@ class _RoomdetailsState extends State<Roomdetails> {
     final String postedByEmail = data['postedByEmail'] ?? '';
     final String postedByUid = data['postedByUid'] ?? '';
     final String location = data['location'] ?? 'Unknown Location';
-    final String price = data['price'] ?? 'N/A';
+    final double price = (data['price'] as num).toDouble();
     final String description = data['description'] ?? 'No Description';
     final List<String> images = List<String>.from(data['images'] ?? []);
     final List<String> amenities =
@@ -197,18 +197,18 @@ class _RoomdetailsState extends State<Roomdetails> {
                     ),
 
                     // Room UID (for debugging or info display)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Room ID: $roomUid',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Center(
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     child: Text(
+                    //       'Room ID: $roomUid',
+                    //       style: const TextStyle(
+                    //         fontSize: 12,
+                    //         color: Colors.grey,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

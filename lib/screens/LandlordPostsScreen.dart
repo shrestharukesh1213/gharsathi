@@ -70,7 +70,8 @@ class _LandlordpostsscreenState extends State<Landlordpostsscreen> {
                                   roomTitle: data[index]['name'],
                                   postedBy: data[index]['postedBy'],
                                   location: data[index]['location']['address'],
-                                  price: data[index]['price'],
+                                  price:
+                                      (data[index]['price'] as num).toDouble(),
                                   description: data[index]['description'],
                                   image: data[index]['images'][0],
                                   amenities: data[index]['amenities'],

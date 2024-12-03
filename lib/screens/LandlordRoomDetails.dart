@@ -52,7 +52,7 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
     final String roomTitle = data['roomTitle'];
-    final String price = data['price'];
+    final double price = (data['price'] as num).toDouble();
     final String propertyType = data['propertyType'] ?? "Not found";
     final String description = data['description'];
     final List<String> images = List<String>.from(data['images']);
