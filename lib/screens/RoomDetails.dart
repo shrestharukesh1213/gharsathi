@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/model/bookroom.dart';
+import 'package:gharsathi/screens/ChatScreen.dart';
 import 'package:gharsathi/services/BookRoomService.dart';
 import 'package:gharsathi/widgets/Esnackbar.dart';
 
@@ -36,6 +37,8 @@ class _RoomdetailsState extends State<Roomdetails> {
     // Safely extract data with fallbacks for null values
     final String roomTitle = data['roomTitle'] ?? 'Unknown Room';
     final String postedBy = data['postedBy'] ?? 'Unknown';
+    final String postedByEmail = data['postedByEmail'] ?? '';
+    final String postedByUid = data['postedByUid'] ?? '';
     final String location = data['location'] ?? 'Unknown Location';
     final String price = data['price'] ?? 'N/A';
     final String description = data['description'] ?? 'No Description';
@@ -178,11 +181,16 @@ class _RoomdetailsState extends State<Roomdetails> {
                         const SizedBox(width: 16),
                         ElevatedButton(
                           onPressed: () {
-                            // Implement contact owner functionality here
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Chatscreen(
+                                  receiverEmail: postedByEmail,
+                                  receiverID: postedByUid,
+                                ),
+                              ),
+                            );
                           },
-                          style: ElevatedButton.styleFrom(
-                            textStyle: const TextStyle(fontSize: 20),
-                          ),
                           child: const Text("Contact Owner"),
                         ),
                       ],

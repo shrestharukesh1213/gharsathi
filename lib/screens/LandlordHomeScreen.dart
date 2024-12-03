@@ -107,6 +107,8 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
         roomTitle: titleController.text,
         postedBy: user!.displayName,
         posterUid: currentUser!.uid,
+        postedByEmail: currentUser.email,
+        postedByUid: currentUser.uid,
         location: {
           'address': address,
           'latitude': latitude,

@@ -50,8 +50,10 @@ class Landlordchatscreen extends StatelessWidget {
     // Display only landlords, and exclude the current user
     if (userData["usertype"] == "Tenant" &&
         userData["email"] != currentUserEmail) {
+      final fullName = "${userData["firstName"]} ${userData["lastName"]}";
+
       return Usertile(
-        text: userData["email"],
+        text: fullName,
         onTap: () {
           Navigator.push(
             context,

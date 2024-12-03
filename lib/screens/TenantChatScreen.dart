@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gharsathi/global_variables.dart';
 import 'package:gharsathi/screens/ChatScreen.dart';
 import 'package:gharsathi/services/ChatService.dart';
 import 'package:gharsathi/services/authentication.dart';
@@ -51,8 +52,10 @@ class Tenantchatscreen extends StatelessWidget {
     // Display only landlords, and exclude the current user
     if (userData["usertype"] == "Landlord" &&
         userData["email"] != currentUserEmail) {
+      final fullName = "${userData["firstName"]} ${userData["lastName"]}";
+
       return Usertile(
-        text: userData["email"],
+        text: fullName,
         onTap: () {
           Navigator.push(
             context,
