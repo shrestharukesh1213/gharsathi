@@ -227,6 +227,8 @@ class _TenanthomescreenState extends State<Tenanthomescreen> {
                         image: data['images']?[0] ?? '',
                         amenities: data['amenities'] ?? [],
                         postDate: data['postDate'] ?? '',
+                        posterUid: data['posterUid'],
+                        postedByEmail: data['postedByEmail'],
                       );
                     },
                   );
