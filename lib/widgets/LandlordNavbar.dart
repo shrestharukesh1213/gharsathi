@@ -15,8 +15,8 @@ class Landlordnavbar extends StatefulWidget {
 class _LandlordnavbarState extends State<Landlordnavbar> {
   int _selectedIndex = 0;
   final _screen = [
-    Landlordhomescreen(),
     Landlordpostsscreen(),
+    Landlordhomescreen(),
     Landlordchatscreen(),
     Landlordprofilescreen(),
   ];
@@ -39,7 +39,7 @@ class _LandlordnavbarState extends State<Landlordnavbar> {
 
           SalomonBottomBarItem(
             icon: const Icon(Icons.post_add_sharp),
-            title: const Text("Posts"),
+            title: const Text("Post"),
             selectedColor: Colors.pink,
           ),
 
