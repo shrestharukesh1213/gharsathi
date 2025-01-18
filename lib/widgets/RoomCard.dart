@@ -165,7 +165,7 @@ class _RoomcardState extends State<Roomcard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'NPR. ${widget.price}',
+                        'Rs. ${widget.price}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       if (userType == "Tenant")

@@ -15,8 +15,8 @@ class Landlordnavbar extends StatefulWidget {
 class _LandlordnavbarState extends State<Landlordnavbar> {
   int _selectedIndex = 0;
   final _screen = [
-    Landlordhomescreen(),
     Landlordpostsscreen(),
+    Landlordhomescreen(),
     Landlordchatscreen(),
     Landlordprofilescreen(),
   ];

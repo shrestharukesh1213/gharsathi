@@ -49,6 +49,12 @@ class Authentication {
         'profileImage': 'https://via.placeholder.com/150',
       });
 
+      if (userType == 'Tenant') {
+        Navigator.pushNamed(context, '/tenantnavbar');
+      } else if (userType == 'Landlord') {
+        Navigator.pushNamed(context, '/landlordnavbar');
+      }
+
       return true; // Registration was successful
     } on FirebaseAuthException catch (e) {
       String message = '';
@@ -117,6 +123,7 @@ class Authentication {
       );
     }
   }
+
   Future<String?> uploadProfile(File imageFile) async {
     try {
       // path to storage
@@ -130,29 +137,30 @@ class Authentication {
       print(e);
       return null;
     }
-  } 
-  Future<void> updateUser(String userId, Users user) async {
-  try {
-    if (user.profileImage != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .update({
-            'profileImage': user.profileImage,  
-            'firstName': user.firstName,
-            'lastName': user.lastName,
-            'phoneNumber': user.phoneNumber,
-          });
-    } else {
-      // If no image is provided, just update the rest of the fields
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .update(user.toJson());
-    }
-  } catch (e) {
-    print("Error updating user: $e");
-    rethrow;
   }
-}
+
+  Future<void> updateUser(String userId, Users user) async {
+    try {
+      if (user.profileImage != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .update({
+          'profileImage': user.profileImage,
+          'firstName': user.firstName,
+          'lastName': user.lastName,
+          'phoneNumber': user.phoneNumber,
+        });
+      } else {
+        // If no image is provided, just update the rest of the fields
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .update(user.toJson());
+      }
+    } catch (e) {
+      print("Error updating user: $e");
+      rethrow;
+    }
+  }
 }

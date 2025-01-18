@@ -89,7 +89,7 @@ class RecommendationCard extends StatelessWidget {
 
                     // Price
                     Text(
-                      "$price",
+                      "Rs. $price",
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,

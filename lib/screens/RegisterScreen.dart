@@ -1,5 +1,6 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:gharsathi/global_variables.dart';
 import 'package:gharsathi/services/authentication.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -121,6 +122,9 @@ class _RegisterscreenState extends State<Registerscreen> {
                       return "Should not contain alphabets";
                     } else if (value.length != 10) {
                       return "Phone number should be 10 digits";
+                    } else if (!value.startsWith('98') &&
+                        !value.startsWith('97')) {
+                      return "Phone number should start with 98 or 97";
                     }
                     return null;
                   },

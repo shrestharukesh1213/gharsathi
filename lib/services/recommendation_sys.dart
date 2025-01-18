@@ -148,7 +148,8 @@ class RecommendationSys {
 
   // Calculate price similarity score
   double calculatePriceScore(double price, double propertyPrice) {
-    // Calculate the deviation as the absolute difference between userPrice and propertyPrice
+    // Calculate the deviation as the absolute difference between
+    // userPrice and propertyPrice divided by price
     double deviation = (price - propertyPrice).abs() / price;
 
     // Convert the deviation into a similarity score (1 - normalized deviation)
@@ -169,7 +170,7 @@ class RecommendationSys {
 
     List<Map<String, dynamic>> scoredProperties = [];
 
-    //Calculate Jaccard Similarity score for properties
+    //Calculate Weighted Similarity score for properties
     for (var property in propertiesSnapshot.docs) {
       double score = await calculateSimilarityScore(userPreferences, property);
       // print("Score: $score");

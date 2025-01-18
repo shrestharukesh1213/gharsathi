@@ -1,18 +1,14 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:gharsathi/global_variables.dart';
-import 'package:gharsathi/services/SharedPref.dart';
-import 'package:gharsathi/model/Users.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gharsathi/services/authentication.dart';
-import 'package:gharsathi/widgets/Esnackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gharsathi/services/authentication.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  const EditProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -20,9 +16,45 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _image;
+  String? profileImageUrl;
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
-  // Function to open media (camera/gallery)
-  void openMedia() async {
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  // Load existing user profile data
+  Future<void> _loadUserProfile() async {
+    try {
+      String userID = FirebaseAuth.instance.currentUser!.uid;
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .get();
+
+      if (userDoc.exists) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+        setState(() {
+          _firstNameController.text = userData['firstName'] ?? '';
+          _lastNameController.text = userData['lastName'] ?? '';
+          _phoneNumberController.text = userData['phoneNumber'] ?? '';
+          profileImageUrl = userData['profileImage'] ??
+              'https://via.placeholder.com/150'; // Default placeholder
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error loading user profile: $e");
+      }
+    }
+  }
+
+  // Open media picker (camera/gallery)
+  void _openMedia() async {
     final action = await showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -66,67 +98,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  // controllers for text fields
-  final TextEditingController _firstNameController =
-      TextEditingController(text: firstName);
-  final TextEditingController _lastNameController =
-      TextEditingController(text: lastName);
-  final TextEditingController _phoneNumberController = TextEditingController();
-
-  // update profile function
+  // Update user profile
   Future<void> _updateFunction() async {
-    if (kDebugMode) {
-      print("First Name: ${_firstNameController.text}");
-      print(lastName);
-      print(profileImage);
-      print(phoneNumber);
-    }
-
-    String? uploadedImage;
-
-    // Check if the user has selected a new image
-    if (_image != null) {
-      uploadedImage = await Authentication().uploadProfile(_image!);
-    }
-
-    String userID = FirebaseAuth.instance.currentUser!.uid;
-    final updatedUserData = Users(
-      firstName: _firstNameController.text,
-      lastName: _lastNameController.text,
-      phoneNumber: _phoneNumberController.text,
-      profileImage:
-          uploadedImage ?? profileImage ?? "https://via.placeholder.com/150",
+    // Show progress indicator (optional)
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
     try {
-      // Update user profile in Firebase and local storage
-      await Authentication()
-          .updateUser(userID, updatedUserData)
-          .then((value) async {
-        // Fetch the user's usertype (role) from Firestore
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userID)
-            .get();
+      String? uploadedImage;
 
-        String userType = userDoc['usertype'];
+      // Check if a new image is selected
+      if (_image != null) {
+        uploadedImage = await Authentication().uploadProfile(_image!);
+      }
 
-        // Navigate based on usertype
-        if (userType == 'tenant') {
-          Navigator.pushReplacementNamed(context, '/tenantnavbar');
-        } else if (userType == 'Landlord') {
-          Navigator.pushReplacementNamed(context, '/landlordnavbar');
-        }
+      String userID = FirebaseAuth.instance.currentUser!.uid;
 
-        SharedPref().updateUserData(updatedUserData);
-        SharedPref().getUserData();
-        Esnackbar.show(context, "Profile updated");
-      }).catchError((error) {
-        Esnackbar.show(context, "Firebase profile update error");
-        return null;
+      // Prepare updated user data
+      final updatedUserData = {
+        'firstName': _firstNameController.text.trim(),
+        'lastName': _lastNameController.text.trim(),
+        'phoneNumber': _phoneNumberController.text.trim(),
+        'profileImage': uploadedImage ?? profileImageUrl,
+      };
+
+      // Update user profile in Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .update(updatedUserData);
+
+      // Update local state
+      setState(() {
+        profileImageUrl = uploadedImage ?? profileImageUrl;
       });
+
+      // Show success message
+      Navigator.pop(context); // Remove progress indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
     } catch (e) {
-      Esnackbar.show(context, "Something went wrong");
+      Navigator.pop(context); // Remove progress indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update profile.')),
+      );
+      if (kDebugMode) {
+        print('Update error: $e');
+      }
     }
   }
 
@@ -134,7 +156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit profile'),
+        title: const Text('Edit Profile'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -142,19 +164,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Profile picture with camera button
             Stack(
               children: [
                 _image == null
                     ? CircleAvatar(
                         radius: 50,
-                        backgroundImage: NetworkImage(profileImage == null
-                            ? 'https://via.placeholder.com/150'
-                            : profileImage!))
+                        backgroundImage: NetworkImage(profileImageUrl ??
+                            'https://via.placeholder.com/150'),
+                      )
                     : CircleAvatar(
                         radius: 50,
-                        backgroundImage:
-                            _image != null ? FileImage(_image!) : null,
+                        backgroundImage: FileImage(_image!),
                       ),
                 Positioned(
                   right: 0,
@@ -165,8 +185,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      onPressed:
-                          openMedia, // Open media picker (camera/gallery)
+                      onPressed: _openMedia,
                       icon: const Icon(
                         Icons.camera_alt,
                         color: Colors.black,
@@ -177,8 +196,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 50),
-            // First name input field
+            const SizedBox(height: 20),
             const Text(
               "First Name",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -190,8 +208,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 40),
-            // Last name input field
+            const SizedBox(height: 20),
             const Text(
               "Last Name",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -203,8 +220,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 40),
-            // Phone number input field
+            const SizedBox(height: 20),
             const Text(
               "Phone Number",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -216,8 +232,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 40),
-            // Update button
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _updateFunction,
               child: const Text("Update"),

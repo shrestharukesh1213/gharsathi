@@ -97,6 +97,19 @@ class _LoginscreenState extends State<Loginscreen> {
                         )),
                   ),
                   const SizedBox(height: 250),
+                  SizedBox(
+                    height: 50,
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/resetpass');
+                      },
+                      child: const Text(
+                        "Forgot Password?",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
                   const Text(
                     "Don't have an account?",
                     style: TextStyle(fontSize: 20),

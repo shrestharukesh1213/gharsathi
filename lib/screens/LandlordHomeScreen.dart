@@ -155,7 +155,8 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
             children: <Widget>[
               TextFormField(
                 controller: titleController,
-                decoration: const InputDecoration(labelText: 'Property Title'),
+                decoration:
+                    const InputDecoration(labelText: 'Property Title *'),
                 onChanged: (value) {
                   roomTitle = value;
                 },
@@ -169,7 +170,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
 
               TextFormField(
                 controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price'),
+                decoration: const InputDecoration(labelText: 'Price *'),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   price = double.parse(value);
@@ -184,7 +185,7 @@ class _LandlordhomescreenState extends State<Landlordhomescreen> {
 
               TextFormField(
                 controller: descriptionController,
-                decoration: const InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Description *'),
                 maxLines: 5,
                 onChanged: (value) {
                   description = value;

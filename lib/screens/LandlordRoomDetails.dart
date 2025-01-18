@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gharsathi/global_variables.dart';
 import 'package:gharsathi/screens/landlordLocationSelectScreen.dart';
 import 'package:gharsathi/services/RoomServices.dart';
 
@@ -42,6 +43,7 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
       location = data['location'];
       _isInitialized = true;
+
       setState(() {});
     }
   }
@@ -150,7 +152,7 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Price: Rs.$price',
+                      'Price: Rs. $price',
                       style: const TextStyle(fontSize: 20),
                     ),
                   ),
@@ -272,12 +274,80 @@ class _LandlordroomdetailsState extends State<Landlordroomdetails> {
                       } else {
                         final data = snapshot.data!.docs.first.data()
                             as Map<String, dynamic>;
+                        Future<String?> getSpecificField() async {
+                          try {
+                            // Reference the Firestore collection (e.g., 'users')
+                            CollectionReference users =
+                                FirebaseFirestore.instance.collection('users');
+
+                            // Query the document with the matching userId
+                            QuerySnapshot querySnapshot = await users
+                                .where('uid', isEqualTo: data['bookerUid'])
+                                .get();
+
+                            if (querySnapshot.docs.isNotEmpty) {
+                              // Assuming the first document matches the userId
+
+                              // Get the specific field
+                              var fieldValue =
+                                  querySnapshot.docs.first.get("phoneNumber");
+
+                              return fieldValue.toString();
+                            } else {
+                              debugPrint(
+                                  'No user found with userId: ${data['bookerUid']}');
+                            }
+                          } catch (e) {
+                            debugPrint('Error getting field: $e');
+                          }
+                          return null;
+                        }
+
+                        Future<void> handleData() async {
+                          String? phoneNumber = await getSpecificField();
+                          print(phoneNumber);
+                          if (phoneNumber != null) {
+                            debugPrint(phoneNumber);
+                          } else {
+                            debugPrint("No number found");
+                          }
+                        }
+
+                        handleData();
+
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Booked By: ${data['bookedBy'] ?? "Not Booked"}\nBooker Id: ${data['bookerUid'] ?? "Not Booked"}",
-                            style: const TextStyle(
-                                fontSize: 15, color: Colors.black),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Booked By: ${data['bookedBy'] ?? "Not Booked"}",
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                              ),
+                              Text(
+                                "Booker Id: ${data['bookerUid'] ?? "Not Booked"}",
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                              ),
+                              FutureBuilder<String?>(
+                                future: getSpecificField(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  }
+
+                                  String displayText =
+                                      snapshot.data ?? "No number found";
+                                  return Text(
+                                    "Phone Number: $displayText",
+                                    style: const TextStyle(
+                                        fontSize: 15, color: Colors.black),
+                                    textAlign: TextAlign.left,
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         );
                       }

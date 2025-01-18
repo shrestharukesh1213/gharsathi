@@ -171,6 +171,15 @@ class _TenantprofilescreenState extends State<Tenantprofilescreen> {
                         subtitle: const Text("View your saved rooms"),
                         trailing: const Icon(Icons.arrow_forward_ios),
                       ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/resetpass');
+                        },
+                        leading: const Icon(Icons.password_outlined),
+                        title: const Text("Reset Password"),
+                        subtitle: const Text("Reset your password"),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                      ),
                     ],
                   ),
                 ),
