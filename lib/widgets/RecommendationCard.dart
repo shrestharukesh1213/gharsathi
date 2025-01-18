@@ -11,18 +11,23 @@ class RecommendationCard extends StatelessWidget {
   final String image;
   final List amenities;
   final String postDate;
+  final String? posterUid;
+  final String? postedByEmail;
 
-  const RecommendationCard(
-      {super.key,
-      required this.roomTitle,
-      required this.propertyType,
-      required this.postedBy,
-      required this.description,
-      required this.location,
-      required this.price,
-      required this.image,
-      required this.amenities,
-      required this.postDate});
+  const RecommendationCard({
+    super.key,
+    required this.roomTitle,
+    required this.propertyType,
+    required this.postedBy,
+    required this.description,
+    required this.location,
+    required this.price,
+    required this.image,
+    required this.amenities,
+    required this.postDate,
+    required this.posterUid,
+    this.postedByEmail = '',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +48,9 @@ class RecommendationCard extends StatelessWidget {
             ], // Wrapping single image in a list for consistency
             "amenities": amenities,
             "roomId": "",
-            "postDate": postDate
+            "postDate": postDate,
+            "posterUid": posterUid,
+            "postedByEmail": postedByEmail,
           },
         );
       },
