@@ -100,13 +100,20 @@ class _LoginscreenState extends State<Loginscreen> {
                   SizedBox(
                     height: 50,
                     width: 200,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/resetpass');
-                      },
-                      child: const Text(
-                        "Forgot Password?",
-                        style: TextStyle(fontSize: 18),
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/resetpass');
+                        },
+                        child: const Text(
+                          "Forgot Password?",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors
+                                .blue, // You can change this to your preferred color
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
                       ),
                     ),
                   ),
