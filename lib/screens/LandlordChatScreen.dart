@@ -61,6 +61,7 @@ class Landlordchatscreen extends StatelessWidget {
               builder: (context) => Chatscreen(
                 receiverEmail: userData["email"],
                 receiverID: userData["uid"],
+                receiverName: fullName,
               ),
             ),
           );

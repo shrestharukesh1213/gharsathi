@@ -187,6 +187,7 @@ class _RoomdetailsState extends State<Roomdetails> {
                                 builder: (context) => Chatscreen(
                                   receiverEmail: postedByEmail,
                                   receiverID: posterUid,
+                                  receiverName: postedBy,
                                 ),
                               ),
                             );

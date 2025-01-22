@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gharsathi/services/ChatService.dart';
 import 'package:gharsathi/services/authentication.dart';
@@ -8,12 +9,13 @@ import 'package:gharsathi/widgets/MessageTextField.dart';
 class Chatscreen extends StatelessWidget {
   final String receiverEmail;
   final String receiverID;
+  final String receiverName;
 
-  Chatscreen({
-    super.key,
-    required this.receiverEmail,
-    required this.receiverID,
-  });
+  Chatscreen(
+      {super.key,
+      required this.receiverEmail,
+      required this.receiverID,
+      required this.receiverName});
 
   //text controller
   final TextEditingController _messageController = TextEditingController();
@@ -37,7 +39,7 @@ class Chatscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(receiverEmail),
+        title: Text(receiverName),
       ),
       body: Column(
         children: [
